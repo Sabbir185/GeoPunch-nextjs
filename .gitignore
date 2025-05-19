@@ -17,6 +17,10 @@
 /.next/
 /out/
 
+.idea
+
+.settings
+
 # production
 /build
 
