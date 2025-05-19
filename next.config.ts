@@ -1,7 +1,24 @@
+import { withSentryConfig } from "@sentry/nextjs";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  images: {
+    domains: ["jtduwrsitwftcmylglxz.supabase.co"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**",
+      },
+    ],
+  },
 };
 
-export default nextConfig;
+export default withSentryConfig(nextConfig, {
+  org: "sabbir185",
+  project: "gps-attendence",
+  silent: !process.env.CI,
+  widenClientFileUpload: true,
+  tunnelRoute: "/monitoring",
+  disableLogger: true,
+  automaticVercelMonitors: true,
+});
