@@ -9,6 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import Image from "next/image";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
@@ -21,6 +22,7 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 
 function Login() {
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const {
     register,
@@ -41,6 +43,7 @@ function Login() {
       console.log("Form data:", data);
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
+      router.push("/dashboard");
     } catch (error) {
       console.error("Login error:", error);
     } finally {
