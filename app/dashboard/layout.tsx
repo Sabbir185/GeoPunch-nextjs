@@ -15,7 +15,6 @@ import { BellRing } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
-import { User } from "@/schemas/user.schema";
 
 function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [profile, setProfile] = useState();
@@ -26,7 +25,7 @@ function DashboardLayout({ children }: { children: React.ReactNode }) {
       <AppSidebar profile={profile} />
       <SidebarInset>
         {/* header */}
-        <header className="flex justify-between h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12 bg-sidebar">
+        <header className="flex justify-between h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12 bg-sidebar blur-sm">
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1 cursor-pointer" />
             <Separator orientation="vertical" className="mr-2 h-4" />
