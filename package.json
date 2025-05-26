@@ -4,10 +4,20 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
+    "prisma:migrate:dev": "dotenv -e .env.development -- prisma migrate dev",
+    "prisma:migrate:prod": "dotenv -e .env.production -- prisma migrate deploy",
+    "prisma:studio:dev": "dotenv -e .env.development -- prisma studio",
+    "backfill-slugs": "tsx scripts/backfill-slugs.ts",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
     "postinstall": "prisma generate"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
@@ -19,6 +29,7 @@
     "@radix-ui/react-slot": "^1.2.3",
     "@radix-ui/react-tooltip": "^1.2.7",
     "@sentry/nextjs": "^9.20.0",
+    "bcryptjs": "^3.0.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
