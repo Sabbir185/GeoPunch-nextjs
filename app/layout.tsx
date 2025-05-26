@@ -24,8 +24,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Attendence System",
-  description: "GPS Attendence System",
+  title: "Attendance System",
+  description: "GPS Attendance System",
 };
 
 export default function RootLayout({

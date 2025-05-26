@@ -3,7 +3,8 @@ import { cookies } from "next/headers";
 import { logEvent } from "@/utils/sentry";
 
 const secret = new TextEncoder().encode(process.env.AUTH_SECRET);
-const cookieName = "auth-token";
+export const cookieName = "auth-token";
+export const cookieAge = 60 * 60 * 24 * 7; // 7 days
 
 // Encrypt and sign token
 export async function signAuthToken(payload: Record<string, unknown>) {
