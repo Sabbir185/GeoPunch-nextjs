@@ -21,17 +21,22 @@ model User {
   password    String
   role        Roles      @default(USER)
   image       String?
+  address     String?
+  department  String?
   designation String?
+  position    Json? // Store as { lat: number, lng: number }
   status      UserStatus @default(ACTIVE)
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   isDeleted   Boolean    @default(false)
+  fcm_token   String?
 }
 
 model Otp {
   id        Int      @id @default(autoincrement())
   email     String
   otp       String
+  action    String // e.g., "login", "signup", "reset_password"
   createdAt DateTime @default(now())
   expiresAt DateTime @default(dbgenerated("NOW() + INTERVAL '5 minutes'"))
 }

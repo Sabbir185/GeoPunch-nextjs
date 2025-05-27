@@ -6,8 +6,8 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { email } = body;
-    if (!email || !email.includes("@")) {
+    const { email, action } = body;
+    if (!email || !email.includes("@") || !action) {
       return NextResponse.json(
         { status: 400, error: true, msg: "Valid email is required" },
         { status: 400 }
@@ -18,6 +18,7 @@ export async function POST(request: NextRequest) {
       data: {
         email: email.toLowerCase().trim(),
         otp,
+        action,
       },
     });
     const { data, error } = await sendEmail({

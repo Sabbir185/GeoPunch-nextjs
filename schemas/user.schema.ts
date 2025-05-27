@@ -1,45 +1,63 @@
 import { z } from "zod";
 
-export const UserRole = z.enum(["ADMIN", "USER", "MANAGER"]);
-export type UserRole = z.infer<typeof UserRole>;
+export const RolesEnum = z.enum(["USER", "ADMIN", "SUPER_ADMIN"]);
+export type Roles = z.infer<typeof RolesEnum>;
 
-export const userSchema = z.object({
-  id: z.string().uuid().optional(),
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-  role: UserRole.default("USER"),
-  phone: z.string().optional(),
-  address: z.string().optional(),
-  profileImage: z.string().url().optional().nullable(),
-  department: z.string().optional(),
-  position: z.string().optional(),
-  employeeId: z.string().optional(),
-  isActive: z.boolean().default(true),
+export const UserStatusEnum = z.enum([
+  "PENDING",
+  "ACTIVE",
+  "INACTIVE",
+  "SUSPENDED",
+]);
+export type UserStatus = z.infer<typeof UserStatusEnum>;
+
+// User schema definition
+export const UserSchema = z.object({
+  id: z.number().int().optional(),
+  name: z.string().min(1, { message: "Name is required" }),
+  email: z.string().email({ message: "Invalid email address" }),
+  phone: z.string({
+    required_error: "Phone is required",
+    invalid_type_error: "Phone must be a string",
+  }),
+  password: z
+    .string()
+    .min(6, { message: "Password must be at least 6 characters" }),
+  role: RolesEnum.default("USER"),
+  image: z.string().url().optional().nullable(),
+  address: z.string().optional().nullable(),
+  department: z.string().optional().nullable(),
+  designation: z.string().optional().nullable(),
+  position: z
+    .object({
+      lat: z.number(),
+      lng: z.number(),
+    })
+    .optional()
+    .nullable(),
+  status: UserStatusEnum.default("ACTIVE"),
   createdAt: z.date().optional(),
   updatedAt: z.date().optional(),
+  isDeleted: z.boolean().default(false),
 });
 
-export const loginUserSchema = z.object({
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(1, "Password is required"),
+export type User = z.infer<typeof UserSchema>;
+
+// signup
+export const CreateUserWithOtpSchema = z.object({
+  name: z.string().min(1, { message: "Name is required" }),
+  email: z.string().email({ message: "Invalid email address" }),
+  phone: z.string({
+    required_error: "Phone is required",
+    invalid_type_error: "Phone must be a string",
+  }),
+  password: z
+    .string()
+    .min(6, { message: "Password must be at least 6 characters" }),
+  designation: z.string().optional(),
+  department: z.string().optional(),
+  otp: z.string().length(6, { message: "OTP must be 6 digits" }),
+  fcm_token: z.string().optional(),
 });
 
-export const changePasswordSchema = z
-  .object({
-    currentPassword: z.string().min(1, "Current password is required"),
-    newPassword: z
-      .string()
-      .min(6, "New password must be at least 6 characters"),
-    confirmPassword: z
-      .string()
-      .min(6, "Confirm password must be at least 6 characters"),
-  })
-  .refine((data) => data.newPassword === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ["confirmPassword"],
-  });
-
-export type User = z.infer<typeof userSchema>;
-export type LoginUserInput = z.infer<typeof loginUserSchema>;
-export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;
+export type CreateUserWithOtpInput = z.infer<typeof CreateUserWithOtpSchema>;
