@@ -1,7 +1,7 @@
-import { prisma } from "@/lib/prisma";
-import { CreateUserWithOtpSchema } from "@/schemas/user.schema";
-import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
+import { prisma } from "@/lib/prisma";
+import { NextRequest, NextResponse } from "next/server";
+import { CreateUserWithOtpSchema } from "@/schemas/user.schema";
 import { cookieAge, cookieName, signAuthToken } from "@/lib/auth";
 
 export async function POST(request: NextRequest) {
@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
         {
           status: 400,
           error: true,
-          msg: "Validation failed",
+          msg: "Invalid input data",
           errors: validation.error.errors,
         },
         { status: 400 }
@@ -99,7 +99,6 @@ export async function POST(request: NextRequest) {
       maxAge: cookieAge,
     });
     return response;
-    
   } catch (error) {
     console.error("Signup API error:", error);
     return NextResponse.json(
