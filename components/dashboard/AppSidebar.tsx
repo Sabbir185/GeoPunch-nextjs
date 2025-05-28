@@ -77,7 +77,7 @@ export function AppSidebar({ profile }: { profile: User | undefined }) {
           <div className="h-[40px] flex justify-between items-center">
             <div className="flex items-center gap-[8px]">
               <Image
-                src={profile?.profileImage || "/images/profile.png"}
+                src={profile?.image || "/images/profile.png"}
                 className={"rounded-full border-[1px]"}
                 height={40}
                 width={40}
