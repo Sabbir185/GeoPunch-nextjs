@@ -1,6 +1,7 @@
 import { jwtVerify } from "jose";
 import { NextRequest } from "next/server";
 import { prisma } from "./prisma";
+import { logEvent } from "@/utils/sentry";
 
 const secret = new TextEncoder().encode(process.env.AUTH_SECRET);
 
@@ -18,14 +19,27 @@ export const verifyAuth = async (req: NextRequest) => {
           email: true,
           name: true,
           image: true,
+          role: true,
+          createdAt: true,
+          updatedAt: true,
+          address: true,
+          phone: true,
+          department: true,
+          designation: true,
+          isDeleted: true,
+          status: true,
+          position: true,
+          fcm_token: true,
+          password: false,
         },
       });
       return user;
     } else {
+      logEvent("Invalid token", "auth", { token: "invalid" }, "warning");
       return false;
     }
   } catch (error) {
-    console.log("Error in verifyAuth", error);
+    logEvent("Error in verifyAuth", "auth", { error }, "error", error);
     return false;
   }
 };
