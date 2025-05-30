@@ -44,20 +44,45 @@ export const UserSchema = z.object({
 export type User = z.infer<typeof UserSchema>;
 
 // signup
-export const CreateUserWithOtpSchema = z.object({
-  name: z.string().min(1, { message: "Name is required" }),
-  email: z.string().email({ message: "Invalid email address" }),
-  phone: z.string({
-    required_error: "Phone is required",
-    invalid_type_error: "Phone must be a string",
-  }),
-  password: z
-    .string()
-    .min(6, { message: "Password must be at least 6 characters" }),
-  designation: z.string().optional(),
-  department: z.string().optional(),
-  otp: z.string().length(6, { message: "OTP must be 6 digits" }),
-  fcm_token: z.string().optional(),
-});
+export const CreateUserWithOtpSchema = z
+  .object({
+    name: z.string().min(1, { message: "Name is required" }),
+    email: z.string().email({ message: "Invalid email address" }),
+    phone: z.string({
+      required_error: "Phone is required",
+      invalid_type_error: "Phone must be a string",
+    }),
+    password: z
+      .string()
+      .min(6, { message: "Password must be at least 6 characters" }),
+    designation: z.string().optional(),
+    department: z.string().optional(),
+    otp: z.string().length(6, { message: "OTP must be 6 digits" }),
+    fcm_token: z.string().optional(),
+  })
+  .strict();
 
-export type CreateUserWithOtpInput = z.infer<typeof CreateUserWithOtpSchema>;
+export const UpdateUserProfileSchema = z
+  .object({
+    name: z.string({ invalid_type_error: "Name must be a string" }).optional(),
+    email: z.string().email({ message: "Invalid email address" }).optional(),
+    phone: z
+      .string({ invalid_type_error: "Phone must be a string" })
+      .optional(),
+    image: z
+      .string({ invalid_type_error: "Image must be a string" })
+      .url()
+      .optional(),
+    address: z
+      .string({ invalid_type_error: "Address must be a string" })
+      .optional(),
+    department: z
+      .string({ invalid_type_error: "Department must be a string" })
+      .optional(),
+    designation: z
+      .string({ invalid_type_error: "Designation must be a string" })
+      .optional(),
+  })
+  .strict();
+
+export type UpdateUserProfileInput = z.infer<typeof UpdateUserProfileSchema>;
