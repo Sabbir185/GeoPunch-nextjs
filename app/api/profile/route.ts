@@ -105,3 +105,39 @@ export async function PATCH(request: NextRequest) {
     );
   }
 }
+
+// delete account
+export async function DELETE(request: NextRequest) {
+  try {
+    const user = await verifyAuth(request);
+    if (!user) {
+      logEvent(
+        "Unauthorized access",
+        "auth",
+        { user: "unauthorized" },
+        "warning"
+      );
+      return NextResponse.json(
+        { status: 401, error: true, msg: "Unauthorized access" },
+        { status: 401 }
+      );
+    }
+    // delete user
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        isDeleted: true,
+      },
+    });
+    return NextResponse.json(
+      { status: 200, error: false, msg: "Account deleted successfully" },
+      { status: 200 }
+    );
+  } catch (error) {
+    logEvent("Account deletion failed", "profile", { error }, "error", error);
+    return NextResponse.json(
+      { status: 500, error: true, msg: "Failed to delete account" },
+      { status: 500 }
+    );
+  }
+}
