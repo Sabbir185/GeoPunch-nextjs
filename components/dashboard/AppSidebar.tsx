@@ -29,14 +29,14 @@ const navItems = [
     href: "/dashboard/users",
   },
   {
-    title: "Reports",
-    icon: <FileBarChart size={20} />,
-    href: "/dashboard/reports",
-  },
-  {
     title: "Locations",
     icon: <MapPin size={20} />,
     href: "/dashboard/locations",
+  },
+  {
+    title: "Reports",
+    icon: <FileBarChart size={20} />,
+    href: "/dashboard/reports",
   },
   {
     title: "Settings",

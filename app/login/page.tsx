@@ -62,6 +62,7 @@ function Login() {
             className="h-full w-full object-cover"
             sizes="(max-width: 768px) 100vw, 50vw"
             priority
+            loading="eager"
           />
         </div>
 
