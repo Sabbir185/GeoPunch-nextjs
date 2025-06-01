@@ -16,6 +16,7 @@ import { BellRing } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
+import dynamic from "next/dynamic";
 
 function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [profile, setProfile] = useState();
@@ -55,17 +56,21 @@ function DashboardLayout({ children }: { children: React.ReactNode }) {
 
 export default DashboardLayout;
 
-const Clock = () => {
-  const [time, setTime] = useState(dayjs());
-  useEffect(() => {
-    const interval = setInterval(() => setTime(dayjs()), 1000);
-    return () => {
-      clearInterval(interval);
-    };
-  }, []);
-  return (
-    <p className="mb-0 text-gray-700 hidden sm:block font-normal font-inter">
-      {time?.format("ddd MMM YYYY, hh:mm:ss A")}
-    </p>
-  );
-};
+const Clock = dynamic(
+  () =>
+    Promise.resolve(() => {
+      const [time, setTime] = useState(dayjs());
+      useEffect(() => {
+        const interval = setInterval(() => setTime(dayjs()), 1000);
+        return () => {
+          clearInterval(interval);
+        };
+      }, []);
+      return (
+        <p className="mb-0 text-gray-700 hidden sm:block font-normal font-inter">
+          {time?.format("ddd MMM YYYY, hh:mm:ss A")}
+        </p>
+      );
+    }),
+  { ssr: false }
+);

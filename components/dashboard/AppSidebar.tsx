@@ -51,7 +51,7 @@ export function AppSidebar({ profile }: { profile: User | undefined }) {
       <Sidebar className="h-screen w-64 p-3">
         <SidebarHeader>
           <div className="flex flex-1 justify-center items-center border-2 border-amber-500">
-            <h1 className="font-bold font-syne text-lg">GPS Attendence</h1>
+            <h1 className="font-bold font-syne text-lg">{process.env.NEXT_PUBLIC_APP_NAME}</h1>
           </div>
         </SidebarHeader>
         <SidebarContent className="mt-3">

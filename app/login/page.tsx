@@ -70,7 +70,7 @@ function Login() {
           <div className="text-center mt-[37px] space-y-2">
             <h1 className="text-3xl font-bold font-syne">Control Panel</h1>
             <h1 className="text-base font-semibold font-inter text-[#4B5563]">
-              GPS Attendance System
+              {process.env.NEXT_PUBLIC_APP_NAME}
             </h1>
           </div>
           <div className="flex flex-col md:-mt-10 items-center justify-center flex-1 px-4 md:px-8 lg:px-12 pb-10 md:pb-0">
