@@ -12,6 +12,8 @@ import { useState } from "react";
 import { loginAction } from "../actions/auth/login";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/contexts/AuthContext";
+import { User } from "@/schemas/user.schema";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
@@ -24,6 +26,7 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 
 function Login() {
   const [isLoading, setIsLoading] = useState(false);
+  const { login } = useAuth() as { login: (user: User) => void };
   const router = useRouter();
 
   const {
@@ -55,6 +58,7 @@ function Login() {
       if (response?.success === false) {
         toast.error(response?.message || "Login failed. Please try again.");
       } else {
+        login(response?.data as User);
         if (response?.data?.role === "ADMIN") {
           toast.success("Login successful! Redirecting...");
           router.push("/dashboard");

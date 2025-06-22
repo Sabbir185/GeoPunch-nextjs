@@ -17,14 +17,19 @@ import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import dynamic from "next/dynamic";
+import { useAuth } from "@/contexts/AuthContext";
+import { User } from "@/schemas/user.schema";
 
 function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [profile, setProfile] = useState();
   const router = useRouter();
+  const { user } = useAuth() as { user: User | null | undefined };
+
+  console.log("user", user);
 
   return (
     <SidebarProvider>
-      <AppSidebar profile={profile} />
+      <AppSidebar profile={user} />
       <SidebarInset>
         {/* header */}
         <header className="flex justify-between h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12 bg-sidebar backdrop-blur-sm">

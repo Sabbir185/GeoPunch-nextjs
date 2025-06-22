@@ -61,11 +61,7 @@ export async function loginAction(formData: FormData) {
     if (userData?.data?.role === "ADMIN") {
       return {
         success: true,
-        data: {
-          role: userData?.data?.role,
-          email: userData?.data?.email,
-          name: userData?.data?.name,
-        },
+        data: userData?.data,
       };
     } else {
       return {

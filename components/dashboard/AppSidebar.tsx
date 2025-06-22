@@ -45,7 +45,7 @@ const navItems = [
   },
 ];
 
-export function AppSidebar({ profile }: { profile: User | undefined }) {
+export function AppSidebar({ profile }: { profile: User | null | undefined }) {
   return (
     <main className="bg-sidebar">
       <Sidebar className="h-screen w-64 p-3">
