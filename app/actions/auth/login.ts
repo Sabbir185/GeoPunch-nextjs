@@ -1,5 +1,5 @@
 "use server";
-import { cookies } from "next/headers";
+import { setAuthCookie } from "@/lib/auth";
 
 export async function loginAction(formData: FormData) {
   try {
@@ -14,8 +14,17 @@ export async function loginAction(formData: FormData) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password }),
+        credentials: "include",
       }
     );
+    const setCookie = response.headers.get("set-cookie");
+    let authToken = null;
+    if (setCookie) {
+      const match = setCookie.match(/auth-token=([^;]+)/);
+      if (match) {
+        authToken = match[1];
+      }
+    }
     const result = await response.json();
 
     if (result?.error) {
@@ -25,13 +34,19 @@ export async function loginAction(formData: FormData) {
       };
     }
 
-    const cookieStore = await cookies();
-    const token = cookieStore.get("auth-token")?.value;
+    if (!authToken) {
+      return {
+        success: false,
+        message: "Authentication token not found",
+      };
+    }
+
+    await setAuthCookie(authToken);
 
     const user = await fetch(process.env.NEXT_PUBLIC_API_URL + "/profile", {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${authToken}`,
       },
     });
     const userData = await user.json();

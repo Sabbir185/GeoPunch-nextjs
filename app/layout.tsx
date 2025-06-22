@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Syne, Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -39,8 +40,8 @@ export default function RootLayout({
       <body
         className={`${syne.variable} ${inter.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
         <Toaster />
+        <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
   );
