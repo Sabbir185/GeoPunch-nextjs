@@ -56,7 +56,11 @@ function Login() {
       formData.append("password", data.password);
       const response = await loginAction(formData);
       if (response?.success === false) {
-        toast.error(response?.message || "Login failed. Please try again.");
+        toast.error(response?.message || "Login failed. Please try again.", {
+          style: {
+            background: "#f39c12",
+          },
+        });
       } else {
         login(response?.data as User);
         if (response?.data?.role === "ADMIN") {
