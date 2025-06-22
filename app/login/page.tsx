@@ -9,6 +9,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import Image from "next/image";
 import { useState } from "react";
+import { loginAction } from "../actions/auth/login";
+import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
 const loginSchema = z.object({
@@ -37,15 +39,35 @@ function Login() {
   });
 
   const onSubmit = async (data: LoginFormValues) => {
+    const validatedFields = loginSchema.safeParse({
+      email: data.email,
+      password: data.password,
+    });
+    if (!validatedFields.success) {
+      throw new Error("Invalid input fields");
+    }
     setIsLoading(true);
     try {
-      // Handle login logic here
-      console.log("Form data:", data);
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      router.push("/dashboard");
+      const formData = new FormData();
+      formData.append("email", data.email);
+      formData.append("password", data.password);
+      const response = await loginAction(formData);
+      if (response?.success === false) {
+        toast.error(response?.message || "Login failed. Please try again.");
+      } else {
+        if (response?.data?.role === "ADMIN") {
+          toast.success("Login successful! Redirecting...");
+          router.push("/dashboard");
+        } else {
+          return {
+            success: false,
+            message: "You are not authorized to access this page",
+          };
+        }
+      }
     } catch (error) {
       console.error("Login error:", error);
+      toast.error("Login failed. Please try again.");
     } finally {
       setIsLoading(false);
     }
