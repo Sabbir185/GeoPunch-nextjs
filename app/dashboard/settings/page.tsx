@@ -59,9 +59,6 @@ export default function SiteSettingsForm() {
     }
   };
 
-  console.log({ logoPreview });
-  console.log({ fileInputRef });
-
   const onSubmit = (data: FormData) => {
     const payload = {
       ...data,

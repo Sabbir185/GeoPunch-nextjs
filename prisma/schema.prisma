@@ -41,6 +41,18 @@ model Otp {
   expiresAt DateTime @default(dbgenerated("NOW() + INTERVAL '5 minutes'"))
 }
 
+model Setting {
+  id           Int      @id @default(autoincrement())
+  site_name    String?
+  site_email   String?
+  site_address String?
+  site_footer  String?
+  site_phone   String?
+  site_logo    String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
 enum UserStatus {
   PENDING
   ACTIVE
