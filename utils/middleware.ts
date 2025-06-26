@@ -1,7 +1,7 @@
 import { profileAction } from "@/app/actions/profile";
 import { NextResponse, type NextRequest } from "next/server";
 
-const protectedRoutes = ["/dashboard", "/settings", "/profile"];
+const protectedRoutes = ["/dashboard", "/profile"];
 
 export async function updateSession(request: NextRequest) {
   const response = NextResponse.next({

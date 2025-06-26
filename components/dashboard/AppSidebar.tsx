@@ -16,6 +16,7 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import { User } from "@/schemas/user.schema";
+import { usePathname } from "next/navigation";
 
 const navItems = [
   {
@@ -46,12 +47,23 @@ const navItems = [
 ];
 
 export function AppSidebar({ profile }: { profile: User | null | undefined }) {
+  const pathname = usePathname();
+
+  const isActive = (href: string) => {
+    if (href === "/dashboard" && pathname === "/dashboard") {
+      return true;
+    }
+    return href !== "/dashboard" && pathname.startsWith(href);
+  };
+
   return (
     <main className="bg-sidebar">
       <Sidebar className="h-screen w-64 p-3">
         <SidebarHeader>
           <div className="flex flex-1 justify-center items-center border-2 border-amber-500">
-            <h1 className="font-bold font-syne text-lg">{process.env.NEXT_PUBLIC_APP_NAME}</h1>
+            <h1 className="font-bold font-syne text-lg">
+              {process.env.NEXT_PUBLIC_APP_NAME}
+            </h1>
           </div>
         </SidebarHeader>
         <SidebarContent className="mt-3">
@@ -59,7 +71,7 @@ export function AppSidebar({ profile }: { profile: User | null | undefined }) {
             {navItems.map((item) => (
               <Link
                 href={item.href}
-                className="hover:bg-[#EBEBE8] h-[36px] rounded-[6px] shadow-none flex items-center"
+                className={`${isActive(item.href) ? "bg-[#EBEBE8] font-semibold" : "hover:bg-[#EBEBE8]"} h-[36px] rounded-[6px] shadow-none flex items-center`}
                 key={item.title}
               >
                 <div className="flex items-center justify-start gap-[8px] h-full ml-[6px]">
