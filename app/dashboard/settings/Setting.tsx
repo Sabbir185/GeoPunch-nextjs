@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React, { useState, useRef, useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -15,6 +16,8 @@ import {
 } from "@/components/ui/card";
 import Image from "next/image";
 import { TSetting } from "@/schemas/setting.schema";
+import { submitSettings } from "@/app/actions/setting";
+import { toast } from "sonner";
 
 const schema = z.object({
   site_name: z.string().min(2, "Site name is required"),
@@ -56,6 +59,9 @@ export default function SiteSettingsForm({ settings }: { settings: TSetting }) {
 
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isSubmitLoader, setIsSubmitLoader] = useState(false);
+
+  console.log({ isSubmitLoader });
 
   useEffect(() => {
     if (settings) {
@@ -81,12 +87,35 @@ export default function SiteSettingsForm({ settings }: { settings: TSetting }) {
     }
   };
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit = async (data: FormData) => {
+    setIsSubmitLoader(true);
     const payload = {
       ...data,
-      site_logo: data.site_logo ? data.site_logo[0] : null,
+      id: settings?.id,
+      site_logo: undefined,
     };
-    console.log(payload);
+    if (data?.site_logo && data.site_logo.size > 10 * 1024 * 1024) {
+      toast.warning("File size must be less than 10MB");
+      setIsSubmitLoader(false);
+      return;
+    }
+    try {
+      const formData = new FormData();
+      formData.append("payload", JSON.stringify(payload));
+      if (data?.site_logo && data?.site_logo[0]) {
+        formData.append("file", data.site_logo[0]);
+      }
+      const res: any = await submitSettings(formData);
+      if (!res?.success) {
+        toast.success(res?.msg);
+      } else {
+        toast.error(res?.msg);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsSubmitLoader(false);
+    }
   };
 
   return (
@@ -207,7 +236,7 @@ export default function SiteSettingsForm({ settings }: { settings: TSetting }) {
               )}
             </div>
             <Button size={"lg"} type="submit" className="mt-8 cursor-pointer">
-              Update
+              {isSubmitLoader ? "Updating..." : "Update"}
             </Button>
           </form>
         </CardContent>
