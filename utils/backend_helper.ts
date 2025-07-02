@@ -11,4 +11,4 @@ export const postSingleFile = (data: Record<string, unknown>) => postForm('/file
 
 // translations
 export const fetchTranslations = (data: Record<string, unknown>) => get("/language/translation", data);
-export const fetchAllLanguages = (data?: Record<string, unknown>) => get("/language/all", data);
+export const fetchAllLanguages = (data: Record<string, unknown>) => get("/language/all", data);

@@ -1,11 +1,11 @@
 'use client'
-import Loading from '@/app/(landing-page)/loading';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useI18n } from '@/context/i18n';
 import { Form } from 'antd';
 import { useEffect, useState } from 'react';
 import { FaSearch } from 'react-icons/fa';
+import {useI18n} from "@/contexts/i18n";
+import Loading from "@/components/loading";
 
 const SearchableSelect = ({ name, label, form, placeholder, options: parentOptions, onChange, onSelect, required, rules = [], classname, value }: { name?: string; label?: string; form?: any; placeholder?: string; options: any[]; onChange?: (query: string) => void; onSelect?: (option: any) => void, required?: boolean, rules?: any[], classname?: string, value?: string }) => {
     const [searchQuery, setSearchQuery] = useState('');
@@ -41,7 +41,7 @@ const SearchableSelect = ({ name, label, form, placeholder, options: parentOptio
             <Select
                 onValueChange={(value) => {
                     const selectedOption = options?.find((option) => (option?.id ?? option?.value) === value);
-                    !!form && form.setFieldsValue({ [name]: value });
+                    !!form && form.setFieldsValue({ [name as string]: value });
                     if (onSelect) onSelect(selectedOption);
                 }}
                 value={value}
@@ -66,7 +66,7 @@ const SearchableSelect = ({ name, label, form, placeholder, options: parentOptio
                     </div>
                     {loading ? (
                         // <div className="p-2 text-center">Loading...</div>
-                        <Loading/>
+                        <Loading />
                     ) : filteredOptions?.length > 0 ? (
                         filteredOptions?.map((option: any) => (
                             <SelectItem key={option?.id ?? option?.value} value={option?.id ?? option?.value}>

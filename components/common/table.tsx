@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { FaEdit, FaEye, FaTrashAlt } from "react-icons/fa";
 import { Empty } from 'antd';

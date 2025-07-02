@@ -2,8 +2,9 @@
 
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { useI18n } from "@/context/i18n"
+
 import { Form } from "antd"
+import {useI18n} from "@/contexts/i18n";
 
 const FormSelect = ({
   name,
@@ -57,7 +58,7 @@ const FormSelect = ({
                 <SelectValue placeholder={i18n?.t(placeholder) || ""} />
               </div>
             </SelectTrigger>
-            { options?.length > 0 && <SelectContent>
+            { (options?.length||0) > 0 && <SelectContent>
               {options?.map((option, index) => (
                 <SelectItem key={index} value={option.value || option?._id}>
                   {i18n?.t(option.label) || option?.name}

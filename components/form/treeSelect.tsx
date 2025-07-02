@@ -3,7 +3,8 @@
 import { TreeSelect } from "antd"
 import { Form } from "antd"
 import { Label } from "@/components/ui/label"
-import { useI18n } from "@/context/i18n"
+import {useI18n} from "@/contexts/i18n";
+
 
 interface TreeOption {
     title: string

@@ -1,7 +1,7 @@
 import { Form } from "antd";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { useI18n } from "@/context/i18n";
+import {useI18n} from "@/contexts/i18n";
 
 const FormFileInput = ({
     name,
@@ -30,7 +30,7 @@ const FormFileInput = ({
                         type="file"
                         accept={accept}
                         onChange={e => {
-                            onChange(e.target.files[0])
+                            e?.target?.files && onChange(e.target.files[0])
                         }}
                     />
                 </div>

@@ -1,9 +1,27 @@
 'use client';
 
-import { Form } from 'antd';
+import {Form} from 'antd';
 import React from 'react';
-import { BtnBold, BtnBulletList, BtnClearFormatting, BtnItalic, BtnLink, BtnNumberedList, BtnRedo, BtnStrikeThrough, BtnStyles, BtnUnderline, BtnUndo, createButton, Editor, EditorProvider, HtmlButton, Separator, Toolbar } from 'react-simple-wysiwyg';
-import { Label } from '../ui/label';
+import {
+    BtnBold,
+    BtnBulletList,
+    BtnClearFormatting,
+    BtnItalic,
+    BtnLink,
+    BtnNumberedList,
+    BtnRedo,
+    BtnStrikeThrough,
+    BtnStyles,
+    BtnUnderline,
+    BtnUndo,
+    createButton,
+    Editor,
+    EditorProvider,
+    HtmlButton,
+    Separator,
+    Toolbar
+} from 'react-simple-wysiwyg';
+import {Label} from '../ui/label';
 
 interface SimpleTextEditorProps {
     value?: string;
@@ -18,14 +36,14 @@ interface SimpleTextEditorProps {
 const BtnAlignCenter = createButton('Align center', '≡', 'justifyCenter');
 
 const SimpleTextEditor: React.FC<SimpleTextEditorProps> = ({
-    value = "",
-    name,
-    label,
-    height,
-    required = false,
-    placeholder = '',
-    onChange
-}) => {
+                                                               value = "",
+                                                               name,
+                                                               label,
+                                                               height,
+                                                               required = false,
+                                                               placeholder = '',
+                                                               onChange
+                                                           }) => {
     const handleEditorChange = (content: string) => {
         if (onChange) {
             onChange(content);
@@ -49,29 +67,29 @@ const SimpleTextEditor: React.FC<SimpleTextEditorProps> = ({
                         style={{
                             minHeight: height ? height : '250px',
                             width: '100%',
-                            maxWidth: '100%', 
-                            minWidth: '0', 
+                            maxWidth: '100%',
+                            minWidth: '0',
                             boxSizing: 'border-box',
                         }}
                     >
                         <Toolbar>
-                            <BtnUndo />
-                            <BtnRedo />
-                            <Separator />
-                            <BtnBold />
-                            <BtnItalic />
-                            <BtnUnderline />
-                            <BtnStrikeThrough />
-                            <BtnAlignCenter />
-                            <Separator />
-                            <BtnNumberedList />
-                            <BtnBulletList />
-                            <Separator />
-                            <BtnLink />
-                            <BtnClearFormatting />
-                            <HtmlButton />
-                            <Separator />
-                            <BtnStyles />
+                            <BtnUndo/>
+                            <BtnRedo/>
+                            <Separator/>
+                            <BtnBold/>
+                            <BtnItalic/>
+                            <BtnUnderline/>
+                            <BtnStrikeThrough/>
+                            <BtnAlignCenter/>
+                            <Separator/>
+                            <BtnNumberedList/>
+                            <BtnBulletList/>
+                            <Separator/>
+                            <BtnLink/>
+                            <BtnClearFormatting/>
+                            <HtmlButton/>
+                            <Separator/>
+                            <BtnStyles/>
                         </Toolbar>
                     </Editor>
                 </Form.Item>

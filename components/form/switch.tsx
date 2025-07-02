@@ -1,9 +1,9 @@
 import { Form } from 'antd'
 import React, { useState } from 'react'
-import { Switch } from '../ui/switch'
 import { Label } from '../ui/label'
-import { useI18n } from '@/context/i18n'
 import { cn } from '@/lib/utils'
+import {useI18n} from "@/contexts/i18n";
+import {Switch} from "@/components/ui/switch";
 
 const FormSwitch = ({
     name,

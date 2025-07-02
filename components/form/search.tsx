@@ -1,5 +1,3 @@
-
-import { useI18n } from '@/context/i18n'
 import { cn } from '@/lib/utils'
 import { Form } from 'antd'
 import { Loader2, Search, X } from 'lucide-react'
@@ -9,6 +7,7 @@ import { Button } from '../ui/button'
 import { Command, CommandEmpty, CommandGroup, CommandItem, CommandList } from '../ui/command'
 import { Input } from '../ui/input'
 import { Label } from '../ui/label'
+import {useI18n} from "@/contexts/i18n";
 
 const FormSearch = ({
     name,

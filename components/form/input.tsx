@@ -3,11 +3,11 @@
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { useI18n } from "@/context/i18n"
 import { Form } from "antd"
 import { FaInfoCircle } from "react-icons/fa"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip"
 import { DatePicker } from "antd"
+import {useI18n} from "@/contexts/i18n";
 const { RangePicker } = DatePicker
 
 const FormInput = ({
@@ -106,7 +106,7 @@ const FormInput = ({
           type="file"
           accept={accept}
           multiple={multiple}
-          onChange={(e) => {
+          onChange={(e: any) => {
             const files = multiple ? Array.from(e.target.files || []) : e.target.files[0]
             onChange(files)
           }}
