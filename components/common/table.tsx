@@ -38,7 +38,6 @@ interface TableProps {
     permission?: string;
 }
 
-
 const Table: React.FC<TableProps> = ({
     columns,
     data,

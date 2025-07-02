@@ -24,9 +24,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         const userInfo = await profileAction();
         if (userInfo?.success && userInfo?.data) {
           setUser(userInfo.data);
-          if (userInfo?.data?.role === "ADMIN") {
-            router.push("/dashboard");
-          }
+          // if (userInfo?.data?.role === "ADMIN") {
+          //   console.log("Admin user detected, redirecting to dashboard");
+          //   router.push("/dashboard");
+          // }
         } else {
           setUser(null);
           router.push("/login");

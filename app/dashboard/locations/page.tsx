@@ -9,8 +9,10 @@ import {
 import React from "react";
 import Table, {TableImage} from "@/components/common/table";
 import ToolTip from "@/components/common/toolTip";
+import {useRouter} from "next/navigation";
 
 function Location() {
+    const router = useRouter();
 
     const columns = [
         {
@@ -54,8 +56,6 @@ function Location() {
                 <ToolTip data={value}/>
             )
         },
-
-
     ];
 
     return (
@@ -67,23 +67,26 @@ function Location() {
                         <CardDescription>Available location list</CardDescription>
                     </div>
                     <div>
-                        <Button>Add New Location</Button>
+                        <Button
+                            size={"lg"}
+                            onClick={() => router.push("/dashboard/locations/add")}
+                            className={"cursor-pointer"}
+                        >
+                            Add New Location
+                        </Button>
                     </div>
                 </CardHeader>
             </Card>
-
-
-                <Table
-                    columns={columns}
-                    data={[]}
-                    pagination
-                    loading={false}
-                    indexed
-                    onReload={() => {
-                    }}
-                    permission={'stores'}
-                />
-
+            <Table
+                columns={columns}
+                data={[]}
+                pagination
+                loading={false}
+                indexed
+                onReload={() => {
+                }}
+                permission={'stores'}
+            />
         </div>
     );
 }
