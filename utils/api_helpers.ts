@@ -1,7 +1,8 @@
-import { cookies } from "next/headers";
-import axios, { AxiosRequestConfig } from "axios";
+"use server";
+import {cookies} from "next/headers";
+import axios, {AxiosRequestConfig} from "axios";
 
-const API_URL = process.env.BACKEND_URL + 'api/v1';
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const axiosApi = axios.create({
     baseURL: API_URL,
@@ -27,7 +28,7 @@ export async function get(
     config: AxiosRequestConfig = {}
 ) {
     axiosApi.defaults.headers.common["Authorization"] = `Bearer ${await getToken()}`;
-    return await axiosApi.get(url, { ...config, params: data }).then(response => response.data);
+    return await axiosApi.get(url, {...config, params: data}).then(response => response.data);
 }
 
 export async function post(
@@ -37,7 +38,7 @@ export async function post(
 ) {
     axiosApi.defaults.headers.common["Authorization"] = `Bearer ${await getToken()}`;
     axiosApi.defaults.headers.common["Content-Type"] = "application/json";
-    return await axiosApi.post(url, data, { ...config }).then(response => response.data);
+    return await axiosApi.post(url, data, {...config}).then(response => response.data);
 }
 
 export async function patch(
@@ -47,7 +48,7 @@ export async function patch(
 ) {
     axiosApi.defaults.headers.common["Authorization"] = `Bearer ${await getToken()}`;
     axiosApi.defaults.headers.common["Content-Type"] = "application/json";
-    return await axiosApi.patch(url, data, { ...config }).then(response => response.data);
+    return await axiosApi.patch(url, data, {...config}).then(response => response.data);
 }
 
 export async function postForm(
@@ -62,7 +63,7 @@ export async function postForm(
         form.append(key, data[key]);
     }
     return axiosApi
-        .post(url, form, { ...config })
+        .post(url, form, {...config})
         .then(response => response.data);
 }
 
@@ -73,7 +74,7 @@ export async function put(
     config: AxiosRequestConfig = {}
 ) {
     axiosApi.defaults.headers.common["Authorization"] = `Bearer ${await getToken()}`;
-    return await axiosApi.put(url, { ...data }, { ...config, params: queryValue }).then(response => response.data);
+    return await axiosApi.put(url, {...data}, {...config, params: queryValue}).then(response => response.data);
 }
 
 export async function del(
@@ -82,5 +83,5 @@ export async function del(
     config: AxiosRequestConfig = {}
 ) {
     axiosApi.defaults.headers.common["Authorization"] = `Bearer ${await getToken()}`;
-    return await axiosApi.delete(url, { ...config, params: data }).then(response => response.data);
+    return await axiosApi.delete(url, {...config, params: data}).then(response => response.data);
 }

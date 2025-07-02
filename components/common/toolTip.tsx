@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 
-const ToolTip = ({ data, maxLength = 20 }: { data: any; maxLength?: number }) => {
+const ToolTip = ({ data, maxLength = 20 }: { data: string; maxLength?: number }) => {
     return (
         <>
             {
