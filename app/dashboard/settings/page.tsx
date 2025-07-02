@@ -1,4 +1,4 @@
-import React from "react";
+export const dynamic = "force-dynamic";
 import SiteSettingsForm from "./Setting";
 import { getAuthCookie } from "@/lib/auth";
 

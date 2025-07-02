@@ -5,14 +5,13 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
-import React, {useEffect} from "react";
+import React, {Suspense, useEffect} from "react";
 import LocationForm from "@/app/dashboard/locations/LocationForm";
 import {useFetch} from "@/hooks/userAction";
 import {fetchLocationList} from "@/utils/backend_helper";
 import {useSearchParams} from 'next/navigation'
-import {TLocation} from "@/schemas/location.schema";
 
-function UpdateLocation() {
+function UpdateLocationContent() {
     const [data, getData, {loading, error}] = useFetch(fetchLocationList)
     const searchParams = useSearchParams()
     const id = searchParams.get('id')
@@ -35,6 +34,14 @@ function UpdateLocation() {
             </Card>
             <LocationForm data={data}/>
         </div>
+    );
+}
+
+function UpdateLocation() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <UpdateLocationContent />
+        </Suspense>
     );
 }
 
