@@ -19,3 +19,9 @@ npx prisma studio                        # ডেটা ব্রাউজ ক�
 ```
 
 Then, open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+Live Demo: https://geopunch.sabbir185.info/
+```
+email: admin@gmail.com
+password: 123456
+```
