@@ -11,12 +11,11 @@ import Table, {TableImage} from "@/components/common/table";
 import ToolTip from "@/components/common/toolTip";
 import {useRouter} from "next/navigation";
 import {useFetch} from "@/hooks/userAction";
-import {fetchLocationList} from "@/utils/backend_helper";
+import {delLocation, fetchLocationList} from "@/utils/backend_helper";
 
 function LocationTable() {
     const [data, getData, {loading, error}] = useFetch(fetchLocationList)
     const router = useRouter();
-    console.log(data)
     const columns = [
         {
             text: "Image",
@@ -30,7 +29,7 @@ function LocationTable() {
             text: "Address",
             dataField: "address",
             formatter: (value: string) => (
-                <ToolTip data={value||""}/>
+                <ToolTip data={value || ""}/>
             )
         },
         {
@@ -79,6 +78,8 @@ function LocationTable() {
                 loading={loading}
                 indexed
                 onReload={getData}
+                onDelete={delLocation}
+                onEdit={(data) => router.push(`/dashboard/locations/update?id=${data.id}`)}
             />
         </div>
     );

@@ -1,13 +1,16 @@
+"use client";
 import {Form, Input} from "antd";
 import {Label} from "@/components/ui/label";
 import Image from "next/image";
-import React, {useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {Button} from "@/components/ui/button";
 import {toast} from "sonner";
 import {submitLocation} from "@/app/actions/location";
 import {useRouter} from "next/navigation";
+import {TLocation} from "@/schemas/location.schema";
 
-const LocationForm = () => {
+const LocationForm = ({data}: { data?: TLocation }) => {
+    const [form] = Form.useForm();
     const router = useRouter();
     const [logoPreview, setLogoPreview] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -25,11 +28,28 @@ const LocationForm = () => {
         }
     };
 
+    useEffect(() => {
+        if (data?.id) {
+            form.setFieldsValue({
+                name: data.name || "",
+                address: data.address || "",
+                lat: data.lat || "",
+                lng: data.lng || "",
+                maxRadius: data.maxRadius || "",
+            });
+            if (data.image) {
+                setLogoPreview(data.image);
+            }
+        }
+    }, [data?.id]);
+
     return (<div className={"p-8 bg-gray-50 border border-gray-200 rounded-lg"}>
         <Form
+            form={form}
             onFinish={async (values) => {
                 setIsSubmitLoader(true)
                 try {
+                    values.id = data?.id;
                     values.lat = parseFloat(values.lat);
                     values.lng = parseFloat(values.lng);
                     values.maxRadius = parseInt(values.maxRadius, 10);

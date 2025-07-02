@@ -9,7 +9,7 @@ import Image from "next/image";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import {useAction} from "@/hooks/userAction";
 import {useI18n} from "@/contexts/i18n";
-import {Loader} from "@/components/common/loader";
+import {ScaleLoader} from "react-spinners";
 
 interface TableColumn {
     text: string;
@@ -90,14 +90,14 @@ const Table: React.FC<TableProps> = ({
                     {data.disableEdit === 1 && !onView && data.disableDelete === 1 && !actions && '-'}
                     {onEdit && (data?.disableEdit !== 1) && (
                         <button
-                            className="border border-indigo-700 text-indigo-700 p-2 rounded hover:bg-indigo-700 hover:text-white focus:shadow-none"
+                            className="border cursor-pointer border-indigo-700 text-white p-2 rounded bg-indigo-500 hover:bg-indigo-700 hover:text-white focus:shadow-none"
                             title="Edit" onClick={() => onEdit(data)}>
                             <FaEdit size={12} />
                         </button>
                     )}
                     {onDelete && (data?.disableDelete !== 1) && (
                         <button
-                            className="border border-red-700 p-2 rounded hover:bg-red-700 text-red-600 hover:text-white focus:shadow-none"
+                            className="border border-red-700 p-2 rounded bg-red-500 hover:bg-red-700 text-white focus:shadow-none cursor-pointer"
                             title="Delete"
                             onClick={async () => await handleDelete(data)}
                         >
@@ -160,7 +160,7 @@ const Table: React.FC<TableProps> = ({
                                     <tr>
                                         <td className="h-[150px] pb-[80px]">
                                             <div style={{ height: 200 }} className='absolute w-[95%] flex justify-center'>
-                                                <Loader />
+                                                <ScaleLoader />
                                             </div>
                                         </td>
                                     </tr>

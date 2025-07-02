@@ -58,6 +58,8 @@ model Location {
   name      String
   address   String
   position  String // Will be geometry(Point, 4326) in the DB
+  lat       Float
+  lng       Float
   image     String?
   isDeleted Boolean  @default(false)
   maxRadius Int

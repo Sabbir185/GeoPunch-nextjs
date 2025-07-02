@@ -23,9 +23,6 @@ function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [profile, setProfile] = useState();
   const router = useRouter();
   const { user } = useAuth() as { user: User | null | undefined };
-
-  console.log("user", user);
-
   return (
     <SidebarProvider>
       <AppSidebar profile={user} />
