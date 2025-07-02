@@ -86,7 +86,7 @@ function Login() {
       <CardContent className="flex flex-1 flex-col md:flex-row p-0 m-0 border-2">
         <div className="relative hidden md:block md:flex-1">
           <Image
-            src="/images/login1.jpg"
+            src="/images/ku_adommo_bangla.jpg"
             alt="Natural background"
             fill
             className="h-full w-full object-cover"
