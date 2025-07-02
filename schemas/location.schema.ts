@@ -13,4 +13,4 @@ export const LocatoinSchema = z.object({
   isDeleted: z.boolean().default(false),
 });
 
-export type TLocatoin = z.infer<typeof LocatoinSchema>;
+export type TLocation = z.infer<typeof LocatoinSchema>;

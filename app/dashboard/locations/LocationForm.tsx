@@ -3,8 +3,12 @@ import {Label} from "@/components/ui/label";
 import Image from "next/image";
 import React, {useRef, useState} from "react";
 import {Button} from "@/components/ui/button";
+import {toast} from "sonner";
+import {submitLocation} from "@/app/actions/location";
+import {useRouter} from "next/navigation";
 
 const LocationForm = () => {
+    const router = useRouter();
     const [logoPreview, setLogoPreview] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [locationImage, setLocationImage] = useState("") as any;
@@ -26,10 +30,24 @@ const LocationForm = () => {
             onFinish={async (values) => {
                 setIsSubmitLoader(true)
                 try {
-                    console.log({locationImage})
-                    console.log(values)
+                    values.lat = parseFloat(values.lat);
+                    values.lng = parseFloat(values.lng);
+                    values.maxRadius = parseInt(values.maxRadius, 10);
+                    const formData = new FormData();
+                    formData.append("payload", JSON.stringify(values));
+                    if (locationImage?.name) {
+                        formData.append("file", locationImage);
+                    }
+                    const res: any = await submitLocation(formData);
+                    if (!res?.success) {
+                        toast.success(res?.msg);
+                        router.push("/dashboard/locations");
+                    } else {
+                        toast.error(res?.msg);
+                    }
                 } catch (error) {
                     console.error("Error submitting form:", error);
+                    toast.error("Failed to submit form. Please try again.");
                 } finally {
                     setIsSubmitLoader(false)
                 }
@@ -86,7 +104,7 @@ const LocationForm = () => {
             </Form.Item>
 
             <Form.Item
-                label={"Max Radius"}
+                label={"Max Radius (In Meters)"}
                 name={"maxRadius"}
                 rules={[{required: true, message: "Please enter the max radius"}]}
                 extra={"This is the maximum radius in meters from the location where the service is available."}
