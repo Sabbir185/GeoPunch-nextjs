@@ -8,14 +8,20 @@ import {
 } from "@/components/ui/card";
 import React from "react";
 import Table, {TableImage} from "@/components/common/table";
-import ToolTip from "@/components/common/toolTip";
 import {useRouter} from "next/navigation";
 import {useFetch} from "@/hooks/userAction";
-import {delLocation, fetchLocationList} from "@/utils/backend_helper";
+import {delUser, fetchUserList} from "@/utils/backend_helper";
+import {Select} from "antd";
 
 function UserTable() {
-    const [data, getData, {loading, error}] = useFetch(fetchLocationList)
+    const [data, getData, {loading, error}] = useFetch(fetchUserList)
     const router = useRouter();
+    const statusColors: Record<string, string> = {
+        "ACTIVE": "green",
+        "INACTIVE": "orange",
+        "PENDING": "yellow",
+        "SUSPENDED": "red",
+    }
     const columns = [
         {
             text: "Image",
@@ -25,27 +31,28 @@ function UserTable() {
             )
         },
         {text: "Name", dataField: "name"},
+        {text: "Email", dataField: "email"},
+        {text: "Phone", dataField: "phone"},
+        {text: "Department", dataField: "department"},
+        {text: "Designation", dataField: "designation"},
         {
-            text: "Address",
-            dataField: "address",
-            formatter: (value: string) => (
-                <ToolTip data={value || ""}/>
-            )
-        },
-        {
-            text: "Latitude",
-            dataField: "lat",
-            formatter: (value: string) => value ?? "N/A"
-        },
-        {
-            text: "Longitude",
-            dataField: "lng",
-            formatter: (value: string) => value ?? "N/A"
-        },
-        {
-            text: "Max Radius",
-            dataField: "maxRadius",
-            formatter: (value: string) => value ?? "N/A"
+            text: "Status",
+            dataField: "status",
+            formatter: (value: string) => <Select
+                onChange={() => {
+                }}
+                defaultValue={value}
+                options={[
+                    {value: "ACTIVE", label: <span className={`text-teal-500`}>Active</span>},
+                    {value: "INACTIVE", label: <span className={`text-orange-500`}>Inactive</span>},
+                    {value: "PENDING", label: <span className={`text-yellow-500`}>Pending</span>},
+                    {value: "SUSPENDED", label: <span className={`text-red-500`}>Suspended</span>},
+                ]}
+                placeholder={"Change Status"}
+                className={`w-[150px] text-${statusColors[value]}`}
+                size={"large"}
+                allowClear
+            />
         },
         {
             text: "Created At",
@@ -78,7 +85,7 @@ function UserTable() {
                 loading={loading}
                 indexed
                 onReload={getData}
-                onDelete={delLocation}
+                onDelete={delUser}
                 onEdit={(data) => router.push(`/dashboard/users/update?id=${data.id}`)}
             />
         </div>

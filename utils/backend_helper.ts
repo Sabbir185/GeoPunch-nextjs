@@ -15,3 +15,8 @@ import {get, post, patch, del, postForm} from './api_helpers'
 // Location
 export const fetchLocationList = (data: Record<string, unknown>) => get('/location', data)
 export const delLocation = (data: Record<string, unknown>) => del('/location', data)
+
+
+// users
+export const fetchUserList = (data: Record<string, unknown>) => get('/user/list', data)
+export const delUser = (data: Record<string, unknown>) => del('/user', data)
