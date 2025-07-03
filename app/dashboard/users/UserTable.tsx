@@ -84,6 +84,7 @@ function UserTable() {
                 data={data}
                 loading={loading}
                 indexed
+                pagination
                 onReload={getData}
                 onDelete={delUser}
                 onEdit={(data) => router.push(`/dashboard/users/update?id=${data.id}`)}

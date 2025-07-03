@@ -195,11 +195,11 @@ const Table: React.FC<TableProps> = ({
                     {pagination && (
                         <div className="pt-3 mt-3 border-t">
                             <Pagination
-                                page={data?.page}
-                                total={data?.totalDocs}
-                                onSizeChange={(limit) => onReload?.({ size: limit })}
-                                limit={data?.limit}
-                                totalPages={data?.totalPages}
+                                page={data?.pagination?.page}
+                                total={data?.pagination?.total}
+                                onSizeChange={(limit) => onReload?.({ limit })}
+                                limit={data?.pagination?.limit}
+                                totalPages={data?.pagination?.totalPages}
                                 onPageChange={(page) => onReload?.({ page })}
                             />
                         </div>

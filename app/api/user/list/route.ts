@@ -69,12 +69,12 @@ export async function GET(req: NextRequest) {
             status: 200,
             error: false,
             msg: "User data retrieved successfully",
-            data: data,
+            data: {docs: data},
         };
 
         // Add pagination metadata for list requests
         if (!id) {
-            response.pagination = {
+            response.data.pagination = {
                 page,
                 limit,
                 total,
