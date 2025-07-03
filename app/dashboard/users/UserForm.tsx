@@ -1,15 +1,18 @@
 "use client";
-import {Form, Input} from "antd";
+import {Form, Input, Select} from "antd";
 import {Label} from "@/components/ui/label";
 import Image from "next/image";
 import React, {useEffect, useRef, useState} from "react";
 import {Button} from "@/components/ui/button";
 import {toast} from "sonner";
-import {submitLocation} from "@/app/actions/location";
 import {useRouter} from "next/navigation";
 import {TLocation} from "@/schemas/location.schema";
+import {useFetch} from "@/hooks/userAction";
+import {fetchLocationList} from "@/utils/backend_helper";
+import {userRegistration} from "@/app/actions/user/register";
 
 const UserForm = ({data}: { data?: TLocation }) => {
+    const [locations, getLocations, {loading, error}] = useFetch(fetchLocationList)
     const [form] = Form.useForm();
     const router = useRouter();
     const [logoPreview, setLogoPreview] = useState<string | null>(null);
@@ -43,31 +46,38 @@ const UserForm = ({data}: { data?: TLocation }) => {
         }
     }, [data?.id]);
 
+    const handleChange = (value: string) => {
+        console.log(`selected ${value}`);
+    };
+
     return (<div className={"p-8 bg-gray-50 border border-gray-200 rounded-lg"}>
         <Form
             form={form}
             onFinish={async (values) => {
                 setIsSubmitLoader(true)
+                const toastId = toast.loading("Please wait...");
                 try {
-                    values.id = data?.id;
-                    values.lat = parseFloat(values.lat);
-                    values.lng = parseFloat(values.lng);
-                    values.maxRadius = parseInt(values.maxRadius, 10);
                     const formData = new FormData();
                     formData.append("payload", JSON.stringify(values));
                     if (userImage?.name) {
                         formData.append("file", userImage);
                     }
-                    const res: any = await submitLocation(formData);
-                    if (!res?.success) {
-                        toast.success(res?.msg);
-                        router.push("/dashboard/locations");
+                    const res: any = await userRegistration(formData);
+                    if (!res?.error) {
+                        toast.success(res?.msg, {
+                            id: toastId,
+                        });
+                        router.push("/dashboard/users");
                     } else {
-                        toast.error(res?.msg);
+                        toast.error(res?.msg, {
+                            id: toastId,
+                        });
                     }
                 } catch (error) {
                     console.error("Error submitting form:", error);
-                    toast.error("Failed to submit form. Please try again.");
+                    toast.error("Failed to submit form. Please try again.", {
+                        id: toastId,
+                    });
                 } finally {
                     setIsSubmitLoader(false)
                 }
@@ -95,6 +105,7 @@ const UserForm = ({data}: { data?: TLocation }) => {
                     placeholder={"Enter email address"}
                     size={"large"}
                     className={"w-full "}
+                    type={"email"}
                 />
             </Form.Item>
 
@@ -143,6 +154,29 @@ const UserForm = ({data}: { data?: TLocation }) => {
                     size={"large"}
                     className={"w-full "}
                 />
+            </Form.Item>
+
+            <Form.Item
+                label={"Location"}
+                name={"locationId"}
+                rules={[{required: true, message: "Please select the location"}]}
+                className={"w-full"}
+            >
+                <Select
+                    onChange={handleChange}
+                    options={locations?.map((location: any) => ({
+                        value: location.id,
+                        label: location.name,
+                    }))}
+                    placeholder={"Select location"}
+                    className="w-full"
+                    size={"large"}
+                    allowClear
+                />
+            </Form.Item>
+
+            <Form.Item>
+                <Input type={"hidden"}/>
             </Form.Item>
 
             <div className="space-y-3 mt-4">

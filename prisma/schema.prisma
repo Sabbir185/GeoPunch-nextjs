@@ -30,6 +30,7 @@ model User {
   updatedAt   DateTime   @updatedAt
   isDeleted   Boolean    @default(false)
   fcm_token   String?
+  locationId  Int?
 }
 
 model Otp {
