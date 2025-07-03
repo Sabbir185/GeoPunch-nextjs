@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
         await sendEmail({
             from: process.env.FROM_EMAIL!,
             to: [email.toLowerCase().trim()],
-            subject: "GPS Attendance - Your OTP Code",
+            subject: "Welcome to GeoPunch",
             html: `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
               <h2 style="color: #333;">Welcome to GeoPunch!</h2>
