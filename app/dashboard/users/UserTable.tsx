@@ -61,15 +61,15 @@ function UserTable() {
                         <CardTitle>User</CardTitle>
                         <CardDescription>All User list</CardDescription>
                     </div>
-                    {/*<div>*/}
-                    {/*    <Button*/}
-                    {/*        size={"lg"}*/}
-                    {/*        onClick={() => router.push("/dashboard/locations/add")}*/}
-                    {/*        className={"cursor-pointer"}*/}
-                    {/*    >*/}
-                    {/*        Add New Location*/}
-                    {/*    </Button>*/}
-                    {/*</div>*/}
+                    <div>
+                        <Button
+                            size={"lg"}
+                            onClick={() => router.push("/dashboard/users/add")}
+                            className={"cursor-pointer"}
+                        >
+                            Add New User
+                        </Button>
+                    </div>
                 </CardHeader>
             </Card>
             <Table

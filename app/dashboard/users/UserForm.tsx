@@ -14,17 +14,17 @@ const UserForm = ({data}: { data?: TLocation }) => {
     const router = useRouter();
     const [logoPreview, setLogoPreview] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
-    const [locationImage, setLocationImage] = useState("") as any;
+    const [userImage, setUserImage] = useState("") as any;
     const [isSubmitLoader, setIsSubmitLoader] = useState(false);
 
     const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
             setLogoPreview(URL.createObjectURL(file));
-            setLocationImage(file as File);
+            setUserImage(file as File);
         } else {
             setLogoPreview(null);
-            setLocationImage(null);
+            setUserImage(null);
         }
     };
 
@@ -55,8 +55,8 @@ const UserForm = ({data}: { data?: TLocation }) => {
                     values.maxRadius = parseInt(values.maxRadius, 10);
                     const formData = new FormData();
                     formData.append("payload", JSON.stringify(values));
-                    if (locationImage?.name) {
-                        formData.append("file", locationImage);
+                    if (userImage?.name) {
+                        formData.append("file", userImage);
                     }
                     const res: any = await submitLocation(formData);
                     if (!res?.success) {
@@ -76,73 +76,77 @@ const UserForm = ({data}: { data?: TLocation }) => {
             className={"grid grid-cols-2 gap-x-3"}
         >
             <Form.Item
-                label={"Location Name"}
+                label={"User Name"}
                 name={"name"}
-                rules={[{required: true, message: "Please enter the location name"}]}
+                rules={[{required: true, message: "Please enter the user name"}]}
             >
                 <Input
-                    placeholder={"Enter location name"}
+                    placeholder={"Enter full name"}
                     size={"large"}
                     className={"w-full "}
                 />
             </Form.Item>
             <Form.Item
-                label={"Address"}
-                name={"address"}
-                rules={[{required: true, message: "Please enter full address"}]}
+                label={"Email Address"}
+                name={"email"}
+                rules={[{required: true, message: "Please enter email address"}]}
             >
                 <Input
-                    placeholder={"Enter full address"}
+                    placeholder={"Enter email address"}
                     size={"large"}
                     className={"w-full "}
                 />
             </Form.Item>
 
             <Form.Item
-                label={"Latitude"}
-                name={"lat"}
-                rules={[{required: true, message: "Please enter location latitude"}]}
+                label={"Phone Number"}
+                name={"phone"}
+                rules={[{required: true, message: "Please enter phone number"}]}
             >
                 <Input
-                    placeholder={"Enter location latitude"}
+                    placeholder={"Phone Number, ex: +88017xxxxxxxx"}
                     size={"large"}
                     className={"w-full "}
-                    type="number"
                 />
             </Form.Item>
             <Form.Item
-                label={"Longitude"}
-                name={"lng"}
-                rules={[{required: true, message: "Please enter location longitude"}]}
+                label={"Password"}
+                name={"password"}
+                rules={[{required: true, message: "Please the password"}]}
             >
-                <Input
-                    placeholder={"Enter location longitude"}
+                <Input.Password
+                    placeholder={"Enter the password"}
                     size={"large"}
                     className={"w-full "}
-                    type="number"
                 />
             </Form.Item>
 
             <Form.Item
-                label={"Max Radius (In Meters)"}
-                name={"maxRadius"}
-                rules={[{required: true, message: "Please enter the max radius"}]}
-                extra={"This is the maximum radius in meters from the location where the service is available."}
+                label={"Department"}
+                name={"department"}
+                rules={[{required: true, message: "Please enter the department"}]}
             >
                 <Input
-                    placeholder={"Enter max radius in meters"}
+                    placeholder={"Enter department, ex: IT, CSE, ECE, HR etc"}
                     size={"large"}
                     className={"w-full "}
-                    type="number"
                 />
             </Form.Item>
 
-            <Form.Item>
-                <Input type={"hidden"}/>
+            <Form.Item
+                label={"Designation"}
+                name={"designation"}
+                rules={[{required: true, message: "Please enter the designation"}]}
+            >
+                <Input
+                    placeholder={"Enter designation, ex: Lecturer, Professor etc"}
+                    size={"large"}
+                    className={"w-full "}
+                />
             </Form.Item>
 
             <div className="space-y-3 mt-4">
-                <Label>Location Image</Label>
+                <Label>User Image</Label>
                 <div className="flex items-center space-x-4">
                     <button
                         type="button"
