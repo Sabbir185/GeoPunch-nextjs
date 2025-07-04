@@ -88,14 +88,14 @@ const Table: React.FC<TableProps> = ({
                         </button>
                     )}
                     {data.disableEdit === 1 && !onView && data.disableDelete === 1 && !actions && '-'}
-                    {onEdit && (data?.disableEdit !== 1) && (
+                    {onEdit && (
                         <button
                             className="border cursor-pointer border-indigo-700 text-white p-2 rounded bg-indigo-500 hover:bg-indigo-700 hover:text-white focus:shadow-none"
                             title="Edit" onClick={() => onEdit(data)}>
                             <FaEdit size={12} />
                         </button>
                     )}
-                    {onDelete && (data?.disableDelete !== 1) && (
+                    {onDelete && (
                         <button
                             className="border border-red-700 p-2 rounded bg-red-500 hover:bg-red-700 text-white focus:shadow-none cursor-pointer"
                             title="Delete"

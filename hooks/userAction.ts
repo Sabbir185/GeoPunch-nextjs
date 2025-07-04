@@ -62,7 +62,7 @@ export const useAction: IUseAction = async (func, data, onSuccess, onError, succ
         }
         if (successAlert) {
             toast.success(successMsg || msg || 'Success', {
-                position: "top-right",
+                position: "bottom-right",
                 duration: 3000,
                 richColors: true
             })
@@ -72,7 +72,7 @@ export const useAction: IUseAction = async (func, data, onSuccess, onError, succ
             onError(d)
         }
         toast.error(msg || 'Error', {
-            position: "top-right",
+            position: "bottom-right",
             duration: 3000,
             richColors: true
         })

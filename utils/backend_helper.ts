@@ -19,4 +19,5 @@ export const delLocation = (data: Record<string, unknown>) => del('/location', d
 
 // users
 export const fetchUserList = (data: Record<string, unknown>) => get('/user/list', data)
-export const delUser = (data: Record<string, unknown>) => del('/user', data)
+export const updateUser = (data: Record<string, unknown>) => patch('/user/registration', data)
+export const delUser = (data: Record<string, unknown>) => del('/user/delete', data)

@@ -80,6 +80,7 @@ export const RegisterUserSchema = z
         department: z.string(),
         image: z.string().optional(),
         locationId: z.number(),
+        status: z.string().optional(),
     })
     .strict();
 

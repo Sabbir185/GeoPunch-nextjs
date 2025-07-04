@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import {prisma} from "@/lib/prisma";
 import {NextRequest, NextResponse} from "next/server";
-import {RegisterUserSchema, TRegisterUserSchema} from "@/schemas/user.schema";
+import {RegisterUserSchema} from "@/schemas/user.schema";
 import {sendEmail} from "@/lib/resend";
 import {verifyAuth} from "@/lib/verify";
 import {logEvent} from "@/utils/sentry";
@@ -127,8 +127,9 @@ export async function PATCH(req: NextRequest) {
             designation,
             department,
             locationId,
-            password
-        }: TRegisterUserSchema = await req.json();
+            password,
+            status
+        } = await req.json();
         const data = {
             name,
             email,
@@ -137,7 +138,8 @@ export async function PATCH(req: NextRequest) {
             designation,
             department,
             locationId,
-            password: password && await bcrypt.hash(password, 10)
+            password: password && await bcrypt.hash(password, 10),
+            status: status,
         }
         const updatedUser = await prisma.user.update({
             where: {id},
@@ -153,6 +155,7 @@ export async function PATCH(req: NextRequest) {
                 locationId: true,
                 createdAt: true,
                 updatedAt: true,
+                status: true
             },
         });
         return NextResponse.json(

@@ -9,9 +9,11 @@ import {
 import React from "react";
 import Table, {TableImage} from "@/components/common/table";
 import {useRouter} from "next/navigation";
-import {useFetch} from "@/hooks/userAction";
-import {delUser, fetchUserList} from "@/utils/backend_helper";
+import {useAction, useFetch} from "@/hooks/userAction";
+import {delUser, fetchUserList, updateUser} from "@/utils/backend_helper";
 import {Select} from "antd";
+import Swal from "sweetalert2";
+import {toast} from "sonner";
 
 function UserTable() {
     const [data, getData, {loading, error}] = useFetch(fetchUserList)
@@ -38,8 +40,35 @@ function UserTable() {
         {
             text: "Status",
             dataField: "status",
-            formatter: (value: string) => <Select
-                onChange={() => {
+            formatter: (value: string, entity: any) => <Select
+                onChange={async (e) => {
+                    let toastId;
+                    try {
+                        const {isConfirmed} = await Swal.fire({
+                            title: "Are you sure?",
+                            text: 'Are you sure you want to change the status?',
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonText: 'Yes',
+                            cancelButtonText: 'No',
+                        });
+                        if (isConfirmed) {
+                            toastId = toast.loading("Changing status...");
+                            const payload = {id: entity.id, status: e}
+                            console.log(payload)
+                            // eslint-disable-next-line react-hooks/rules-of-hooks
+                            await useAction(updateUser, payload, (dt: any) => {
+                                console.log("Status updated successfully", dt);
+                                getData(undefined)
+                            });
+                        }
+                        toast.dismiss(toastId);
+                    } catch (error) {
+                        toast.error("Failed to change status", {
+                            id: toastId,
+                            richColors: true
+                        });
+                    }
                 }}
                 defaultValue={value}
                 options={[

@@ -59,7 +59,7 @@ function LocationTable() {
                 <CardHeader className="flex justify-between items-center">
                     <div className="space-y-1">
                         <CardTitle>Locations</CardTitle>
-                        <CardDescription>Available location list</CardDescription>
+                        <CardDescription>Manage your service location</CardDescription>
                     </div>
                     <div>
                         <Button
@@ -73,6 +73,7 @@ function LocationTable() {
                 </CardHeader>
             </Card>
             <Table
+                title={"GeoPunch Location List"}
                 columns={columns}
                 data={data}
                 loading={loading}
