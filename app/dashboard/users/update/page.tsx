@@ -7,12 +7,12 @@ import {
 } from "@/components/ui/card";
 import React, {Suspense, useEffect} from "react";
 import {useFetch} from "@/hooks/userAction";
-import {fetchLocationList} from "@/utils/backend_helper";
+import {fetchUserList} from "@/utils/backend_helper";
 import {useSearchParams} from 'next/navigation'
 import UserForm from "@/app/dashboard/users/UserForm";
 
 function UserEditContent() {
-    const [data, getData, {loading, error}] = useFetch(fetchLocationList)
+    const [data, getData, {loading, error}] = useFetch(fetchUserList, {}, false)
     const searchParams = useSearchParams()
     const id = searchParams.get('id')
 
@@ -32,7 +32,7 @@ function UserEditContent() {
                     </div>
                 </CardHeader>
             </Card>
-            <UserForm data={data}/>
+            <UserForm data={data} update={true}/>
         </div>
     );
 }
@@ -40,7 +40,7 @@ function UserEditContent() {
 function UserEdit() {
     return (
         <Suspense fallback={<div>Loading...</div>}>
-            <UserEditContent />
+            <UserEditContent/>
         </Suspense>
     );
 }

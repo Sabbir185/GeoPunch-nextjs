@@ -66,6 +66,7 @@ export const CreateUserWithOtpSchema = z
 // admin
 export const RegisterUserSchema = z
     .object({
+        id: z.number().int().optional(),
         name: z.string().min(1, {message: "Name is required"}),
         email: z.string().email({message: "Invalid email address"}),
         phone: z.string({
@@ -106,3 +107,4 @@ export const UpdateUserProfileSchema = z
     .strict();
 
 export type UpdateUserProfileInput = z.infer<typeof UpdateUserProfileSchema>;
+export type TRegisterUserSchema = z.infer<typeof RegisterUserSchema>;

@@ -31,6 +31,20 @@ export async function GET(req: NextRequest) {
         if (id) {
             data = await prisma.user.findFirst({
                 where: {id: Number(id)},
+                select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    phone: true,
+                    department: true,
+                    designation: true,
+                    image: true,
+                    locationId: true,
+                    createdAt: true,
+                    updatedAt: true,
+                    isDeleted: true,
+                    status: true,
+                },
             });
         } else {
             const skip = (page - 1) * limit;
@@ -38,14 +52,14 @@ export async function GET(req: NextRequest) {
             // Build search conditions
             const searchConditions = search ? {
                 OR: [
-                    { name: { contains: search, mode: 'insensitive' } },
-                    { email: { contains: search, mode: 'insensitive' } },
-                    { phone: { contains: search, mode: 'insensitive' } }
+                    {name: {contains: search, mode: 'insensitive'}},
+                    {email: {contains: search, mode: 'insensitive'}},
+                    {phone: {contains: search, mode: 'insensitive'}}
                 ]
             } : {};
 
             const whereClause = {
-                role: { not: "ADMIN" },
+                role: {not: "ADMIN"},
                 isDeleted: false,
                 ...searchConditions
             };
@@ -70,7 +84,7 @@ export async function GET(req: NextRequest) {
                     skip,
                     take: limit,
                 }),
-                prisma.user.count({ where: whereClause as object })
+                prisma.user.count({where: whereClause as object})
             ]);
         }
 
@@ -85,7 +99,7 @@ export async function GET(req: NextRequest) {
             status: 200,
             error: false,
             msg: "User data retrieved successfully",
-            data: {docs: data},
+            data: id ? data : {docs: data},
         };
 
         // Add pagination metadata for list requests

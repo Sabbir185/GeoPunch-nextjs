@@ -6,12 +6,12 @@ import React, {useEffect, useRef, useState} from "react";
 import {Button} from "@/components/ui/button";
 import {toast} from "sonner";
 import {useRouter} from "next/navigation";
-import {TLocation} from "@/schemas/location.schema";
 import {useFetch} from "@/hooks/userAction";
 import {fetchLocationList} from "@/utils/backend_helper";
 import {userRegistration} from "@/app/actions/user/register";
+import {TRegisterUserSchema} from "@/schemas/user.schema";
 
-const UserForm = ({data}: { data?: TLocation }) => {
+const UserForm = ({data, update}: { data?: TRegisterUserSchema, update: boolean }) => {
     const [locations, getLocations, {loading, error}] = useFetch(fetchLocationList)
     const [form] = Form.useForm();
     const router = useRouter();
@@ -34,11 +34,12 @@ const UserForm = ({data}: { data?: TLocation }) => {
     useEffect(() => {
         if (data?.id) {
             form.setFieldsValue({
-                name: data.name || "",
-                address: data.address || "",
-                lat: data.lat || "",
-                lng: data.lng || "",
-                maxRadius: data.maxRadius || "",
+                name: data.name,
+                email: data.email,
+                phone: data.phone,
+                department: data.department,
+                designation: data.designation,
+                locationId: data.locationId,
             });
             if (data.image) {
                 setLogoPreview(data.image);
@@ -54,6 +55,7 @@ const UserForm = ({data}: { data?: TLocation }) => {
         <Form
             form={form}
             onFinish={async (values) => {
+                values.id = data?.id;
                 setIsSubmitLoader(true)
                 const toastId = toast.loading("Please wait...");
                 try {
@@ -123,7 +125,7 @@ const UserForm = ({data}: { data?: TLocation }) => {
             <Form.Item
                 label={"Password"}
                 name={"password"}
-                rules={[{required: true, message: "Please the password"}]}
+                rules={[{required: !update, message: "Please the password"}]}
             >
                 <Input.Password
                     placeholder={"Enter the password"}

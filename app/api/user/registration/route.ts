@@ -1,8 +1,10 @@
 import bcrypt from "bcryptjs";
 import {prisma} from "@/lib/prisma";
 import {NextRequest, NextResponse} from "next/server";
-import {RegisterUserSchema} from "@/schemas/user.schema";
+import {RegisterUserSchema, TRegisterUserSchema} from "@/schemas/user.schema";
 import {sendEmail} from "@/lib/resend";
+import {verifyAuth} from "@/lib/verify";
+import {logEvent} from "@/utils/sentry";
 
 export async function POST(request: NextRequest) {
     try {
@@ -96,6 +98,82 @@ export async function POST(request: NextRequest) {
                 error: true,
                 msg: "Failed to create user. Please try later.",
             },
+            {status: 500}
+        );
+    }
+}
+
+export async function PATCH(req: NextRequest) {
+    try {
+        const user = await verifyAuth(req);
+        if (!user || user?.role !== "ADMIN") {
+            logEvent(
+                "Unauthorized access",
+                "auth",
+                {user: "unauthorized"},
+                "warning"
+            );
+            return NextResponse.json(
+                {status: 401, error: true, msg: "Unauthorized access"},
+                {status: 401}
+            );
+        }
+        const {
+            id,
+            name,
+            email,
+            phone,
+            image,
+            designation,
+            department,
+            locationId,
+            password
+        }: TRegisterUserSchema = await req.json();
+        const data = {
+            name,
+            email,
+            phone,
+            image,
+            designation,
+            department,
+            locationId,
+            password: password && await bcrypt.hash(password, 10)
+        }
+        const updatedUser = await prisma.user.update({
+            where: {id},
+            data,
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                phone: true,
+                department: true,
+                designation: true,
+                image: true,
+                locationId: true,
+                createdAt: true,
+                updatedAt: true,
+            },
+        });
+        return NextResponse.json(
+            {
+                status: 200,
+                error: false,
+                msg: "User updated successfully",
+                data: updatedUser,
+            },
+            {status: 200}
+        );
+    } catch (error) {
+        logEvent(
+            "Failed to update user",
+            "location",
+            {error},
+            "error",
+            error
+        );
+        return NextResponse.json(
+            {status: 500, error: true, msg: "Failed to update user"},
             {status: 500}
         );
     }
