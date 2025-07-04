@@ -8,6 +8,7 @@ export async function GET(req: NextRequest) {
         const user = await verifyAuth(req);
         const {searchParams} = new URL(req.url);
         const id = searchParams.get("id");
+        const search = searchParams.get("search");
         const page = parseInt(searchParams.get("page") || "1");
         const limit = parseInt(searchParams.get("limit") || "10");
 
@@ -34,9 +35,24 @@ export async function GET(req: NextRequest) {
         } else {
             const skip = (page - 1) * limit;
 
+            // Build search conditions
+            const searchConditions = search ? {
+                OR: [
+                    { name: { contains: search, mode: 'insensitive' } },
+                    { email: { contains: search, mode: 'insensitive' } },
+                    { phone: { contains: search, mode: 'insensitive' } }
+                ]
+            } : {};
+
+            const whereClause = {
+                role: { not: "ADMIN" },
+                isDeleted: false,
+                ...searchConditions
+            };
+
             [data, total] = await Promise.all([
                 prisma.user.findMany({
-                    where: { role : { not: "ADMIN" }, isDeleted: false },
+                    where: whereClause as object,
                     select: {
                         id: true,
                         name: true,
@@ -54,7 +70,7 @@ export async function GET(req: NextRequest) {
                     skip,
                     take: limit,
                 }),
-                prisma.user.count({where: { role : { not: "ADMIN" } },})
+                prisma.user.count({ where: whereClause as object })
             ]);
         }
 
