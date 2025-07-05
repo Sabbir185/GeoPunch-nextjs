@@ -11,7 +11,7 @@ import {fetchLocationList} from "@/utils/backend_helper";
 import {userRegistration} from "@/app/actions/user/register";
 import {TRegisterUserSchema} from "@/schemas/user.schema";
 
-const UserForm = ({data, update}: { data?: TRegisterUserSchema, update: boolean }) => {
+const UserForm = ({data, update}: { data?: TRegisterUserSchema, update?: boolean }) => {
     const [locations, getLocations, {loading, error}] = useFetch(fetchLocationList)
     const [form] = Form.useForm();
     const router = useRouter();
