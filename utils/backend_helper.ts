@@ -21,3 +21,10 @@ export const delLocation = (data: Record<string, unknown>) => del('/location', d
 export const fetchUserList = (data: Record<string, unknown>) => get('/user/list', data)
 export const updateUser = (data: Record<string, unknown>) => patch('/user/registration', data)
 export const delUser = (data: Record<string, unknown>) => del('/user/delete', data)
+
+// place of presence
+export const fetchPlaceList = (data: Record<string, unknown>) => get('/place-of-presence', data)
+export const updatePlace = (data: Record<string, unknown>) => patch('/place-of-presence', data)
+export const delPlace = (data: Record<string, unknown>) => del('/place-of-presence', data)
+export const createPlace = (data: Record<string, unknown>) => post('/place-of-presence', data)
+
