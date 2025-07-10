@@ -20,7 +20,7 @@ import {
     SidebarTrigger,
 } from "@/components/ui/sidebar";
 import {Separator} from "@radix-ui/react-separator";
-import {BellRing} from "lucide-react";
+import {LayoutList} from "lucide-react";
 import {useRouter} from "next/navigation";
 import React, {useEffect, useState} from "react";
 import dayjs from "dayjs";
@@ -52,11 +52,11 @@ function DashboardLayout({children}: { children: React.ReactNode }) {
                     <div className={"mr-8 flex justify-between items-center gap-2"}>
                         {/*clock*/}
                         <Clock/>
-                        {/*notification*/}
-                        {/*<div className="border py-1 px-3 rounded-lg">*/}
-                        {/*    /!* show profile *!/*/}
-                        {/*    <BellRing size={20}/>*/}
-                        {/*</div>*/}
+                        {/*leader board list*/}
+                        <div className="border py-1 px-3 rounded-lg" title={"Activity Log"}
+                             onClick={() => router.push("/activity")}>
+                            <LayoutList size={20} className={"cursor-pointer text-yellow-600"}/>
+                        </div>
                         {/*profile image*/}
                         <Menubar>
                             <MenubarMenu>
@@ -67,10 +67,13 @@ function DashboardLayout({children}: { children: React.ReactNode }) {
                                     </Avatar>
                                 </MenubarTrigger>
                                 <MenubarContent>
-                                    <MenubarItem onClick={() => router.push(`/dashboard/users/update?id=${user?.id as number}`)}>
-                                        Profile <MenubarShortcut>⌘T</MenubarShortcut>
+                                    <MenubarItem
+                                        onClick={() => router.push(`/dashboard/users/update?id=${user?.id as number}`)}>
+                                        Profile <MenubarShortcut>⌘P</MenubarShortcut>
                                     </MenubarItem>
-                                    {/*<MenubarItem>New Window</MenubarItem>*/}
+                                    <MenubarItem onClick={() => router.push("/activity")}>
+                                        Activity Log <MenubarShortcut>⌘L</MenubarShortcut>
+                                    </MenubarItem>
                                     <MenubarSeparator/>
                                     <MenubarItem onClick={() => logout()}>
                                         Logout
