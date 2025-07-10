@@ -4,6 +4,7 @@ import { profileAction } from "@/app/actions/profile";
 import { User } from "@/schemas/user.schema";
 import { useRouter } from "next/navigation";
 import React, { createContext, useContext, useState, useEffect } from "react";
+import {clearAuthCookie} from "@/app/actions/auth/login";
 
 const AuthContext = createContext({});
 
@@ -46,8 +47,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setUser(userData);
   };
 
-  const logout = () => {
+  const logout = async () => {
     setUser(null);
+    await clearAuthCookie();
     router.push("/login");
   };
 

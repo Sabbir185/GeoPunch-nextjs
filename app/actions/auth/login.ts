@@ -1,5 +1,7 @@
 "use server";
-import { setAuthCookie } from "@/lib/auth";
+import {cookieName, setAuthCookie} from "@/lib/auth";
+import {cookies} from "next/headers";
+import {logEvent} from "@/utils/sentry";
 
 export async function loginAction(formData: FormData) {
   try {
@@ -72,5 +74,14 @@ export async function loginAction(formData: FormData) {
   } catch (error) {
     console.log("Login error:", error);
     return { success: false, message: "Login failed. Please try again." };
+  }
+}
+
+export async function clearAuthCookie() {
+  try {
+    const cookieStore = await cookies();
+    cookieStore.delete(cookieName);
+  } catch (error) {
+    logEvent("Failed to remove the auth cookie", "auth", {}, "error", error);
   }
 }

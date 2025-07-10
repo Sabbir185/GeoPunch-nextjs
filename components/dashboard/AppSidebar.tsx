@@ -99,12 +99,12 @@ export function AppSidebar({ profile }: { profile: User | null | undefined }) {
                 {profile?.name}
               </p>
             </div>
-            <span
-              onClick={() => alert("Coming soon")}
-              className="cursor-pointer"
-            >
-              <SettingsIcon />
-            </span>
+            {/*<span*/}
+            {/*  onClick={() => alert("Coming soon")}*/}
+            {/*  className="cursor-pointer"*/}
+            {/*>*/}
+            {/*  <SettingsIcon />*/}
+            {/*</span>*/}
           </div>
         </SidebarFooter>
       </Sidebar>

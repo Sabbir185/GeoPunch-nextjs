@@ -50,6 +50,7 @@ function Login() {
       throw new Error("Invalid input fields");
     }
     setIsLoading(true);
+    const toastId = toast.loading("Logging in...");
     try {
       const formData = new FormData();
       formData.append("email", data.email);
@@ -57,6 +58,7 @@ function Login() {
       const response = await loginAction(formData);
       if (response?.success === false) {
         toast.error(response?.message || "Login failed. Please try again.", {
+            id: toastId,
           style: {
             background: "#f39c12",
           },
@@ -64,7 +66,7 @@ function Login() {
       } else {
         login(response?.data as User);
         if (response?.data?.role === "ADMIN") {
-          toast.success("Login successful! Redirecting...");
+          toast.success("Login successful! Redirecting...", {id: toastId});
           router.push("/dashboard");
         } else {
           return {
@@ -75,7 +77,7 @@ function Login() {
       }
     } catch (error) {
       console.error("Login error:", error);
-      toast.error("Login failed. Please try again.");
+      toast.error("Login failed. Please try again.", {id: toastId});
     } finally {
       setIsLoading(false);
     }
