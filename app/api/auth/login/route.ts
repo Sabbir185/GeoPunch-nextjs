@@ -5,7 +5,7 @@ import { cookieAge, cookieName, signAuthToken } from "@/lib/auth";
 
 export async function POST(req: NextRequest) {
   try {
-    const { email, password } = await req.json();
+    const { email, password, device, fcm_token } = await req.json();
     if (!email || !password) {
       return NextResponse.json(
         { status: 400, error: true, msg: "Email and password are required" },
@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
       role: user.role,
     });
     const response = NextResponse.json(
-      { status: 200, error: false, msg: "Login successful" },
+      { status: 200, error: false, msg: "Login successful", data: {accessToken: device === "mobile" ? token : undefined} },
       { status: 200 }
     );
     response.cookies.set(cookieName, token, {
