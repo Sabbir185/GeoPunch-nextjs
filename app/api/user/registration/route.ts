@@ -80,6 +80,8 @@ export async function POST(request: NextRequest) {
               <p>We are pleased to inform you that an account has been created for you by the administrator. You may now log in and begin using the platform's features.</p>
               <div style="background-color: #f4f4f4; padding: 20px; text-align: center; margin: 20px 0;">
                 <h3 style="color: #2563eb; margin: 0;">We're excited to have you on board!</h3>
+                <h5 style="color: #2563eb; margin: 0;">Your email: ${email.toLowerCase().trim()}</h5>
+                <h5 style="color: #2563eb; margin: 0;">Your Password: ${password}</h5>
               </div>
               <p style="color: #666;">If you have any questions, feel free to reply to this email.</p>
               <p style="color: #666;">Best regards,<br/>The GeoPunch Team, ${process.env.FROM_EMAIL}</p>
@@ -138,7 +140,7 @@ export async function PATCH(req: NextRequest) {
             designation,
             department,
             locationId,
-            password: password && await bcrypt.hash(password, 10),
+            password: password ? await bcrypt.hash(password, 10) : undefined,
             status: status,
         }
         const updatedUser = await prisma.user.update({
