@@ -19,6 +19,26 @@ export async function POST(req: NextRequest) {
                 {status: 401}
             );
         }
+        const lastActivityLog = await prisma.activityLog.findFirst({
+            where: {
+                userId: userInfo.id,
+                action: "Checked-In",
+                checkedOutTime: null,
+            },
+            orderBy: {
+                createdAt: "desc",
+            },
+        });
+        if (lastActivityLog?.id) {
+            return NextResponse.json(
+                {
+                    status: 409,
+                    error: true,
+                    msg: "You have already checked in",
+                },
+                {status: 409}
+            );
+        }
         const body = await req.json();
         const validation = createActivityLogSchema.safeParse(body);
         if (!validation.success) {
@@ -81,6 +101,14 @@ export async function POST(req: NextRequest) {
             },
         })
 
+        await prisma.user.update({
+            where: {id: userInfo.id},
+            data: {
+                lastActivity: new Date(),
+                activityStatus: "Checked-In" as string,
+            },
+        })
+
         return NextResponse.json(
             {
                 status: 200,
@@ -91,7 +119,7 @@ export async function POST(req: NextRequest) {
             {status: 200}
         );
     } catch (err) {
-        console.error("Login check-in error: ", err);
+        console.error("check-in error: ", err);
         if (err instanceof Error) {
             return NextResponse.json(
                 {

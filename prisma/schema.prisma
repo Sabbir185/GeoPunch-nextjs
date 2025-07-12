@@ -14,25 +14,26 @@ datasource db {
 }
 
 model User {
-  id           Int           @id @default(autoincrement())
-  name         String
-  email        String        @unique
-  phone        String        @unique
-  password     String
-  role         Roles         @default(USER)
-  image        String?
-  address      String?
-  department   String?
-  designation  String?
-  position     Json? // Store as { lat: number, lng: number }
-  status       UserStatus    @default(ACTIVE)
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  isDeleted    Boolean       @default(false)
-  fcm_token    String?
-  locationId   Int?
-  ActivityLog  ActivityLog[]
-  lastActivity DateTime?
+  id             Int           @id @default(autoincrement())
+  name           String
+  email          String        @unique
+  phone          String        @unique
+  password       String
+  role           Roles         @default(USER)
+  image          String?
+  address        String?
+  department     String?
+  designation    String?
+  position       Json? // Store as { lat: number, lng: number }
+  status         UserStatus    @default(ACTIVE)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  isDeleted      Boolean       @default(false)
+  fcm_token      String?
+  locationId     Int?
+  ActivityLog    ActivityLog[]
+  lastActivity   DateTime?
+  activityStatus String? // e.g., "Checked-In", "Checked-Out"
 }
 
 model Otp {

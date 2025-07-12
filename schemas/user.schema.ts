@@ -40,6 +40,8 @@ export const UserSchema = z.object({
     updatedAt: z.date().optional(),
     isDeleted: z.boolean().default(false),
     locationId: z.number().int().optional(),
+    activityStatus: z.string().optional(),
+    lastActivity: z.date().optional(),
 });
 
 export type User = z.infer<typeof UserSchema>;

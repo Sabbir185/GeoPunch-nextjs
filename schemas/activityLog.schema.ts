@@ -23,7 +23,7 @@ export const activityLogSchema = z.object({
 });
 
 export const createActivityLogSchema = z.object({
-    checkedInTime: z.date(),
+    checkedInTime: z.string(),
     checkedInPlace: placeSchema,
     userId: z.number().int().positive(),
     action: z.enum(['Checked-In', 'Checked-Out']).default('Checked-In')
@@ -32,7 +32,7 @@ export const createActivityLogSchema = z.object({
 export const updateActivityLogSchema = z.object({
     id: z.number().int().positive(),
     userId: z.number().int().positive(),
-    checkedOutTime: z.date(),
+    checkedOutTime: z.string(),
     checkedOutPlace: placeSchema
 });
 
