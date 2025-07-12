@@ -1,49 +1,45 @@
 import {NextRequest, NextResponse} from "next/server";
-import bcrypt from "bcryptjs";
 import {prisma} from "@/lib/prisma";
-import {cookieAge, cookieName, signAuthToken} from "@/lib/auth";
+import {verifyAuth} from "@/lib/verify";
+import {logEvent} from "@/utils/sentry";
+import {createActivityLogSchema} from "@/schemas/activityLog.schema";
 
 export async function POST(req: NextRequest) {
     try {
-        //check auth
-        const {id, email, lat, lng} = await req.json();
-        if (!email || !lat || !lng) {
+        const userInfo = await verifyAuth(req);
+        if (!userInfo) {
+            logEvent(
+                "Unauthorized access",
+                "auth",
+                {user: "unauthorized"},
+                "warning"
+            );
             return NextResponse.json(
-                {status: 400, error: true, msg: "Please input the valid information"},
-                {status: 400}
+                {status: 401, error: true, msg: "Unauthorized access"},
+                {status: 401}
             );
         }
-        const user = await prisma.user.findUnique({
-            where: {email},
-        });
-        if (!user) {
+        const body = await req.json();
+        const validation = createActivityLogSchema.safeParse(body);
+        if (!validation.success) {
             return NextResponse.json(
-                {status: 404, error: true, msg: "User not found"},
-                {status: 404}
+                {
+                    status: 400,
+                    error: true,
+                    msg: "Invalid input data",
+                    errors: validation.error.errors,
+                },
+                {status: 400}
             );
         }
 
-        // check location
-        if (!user.locationId) {
-            return NextResponse.json(
-                {status: 400, error: true, msg: "User location not configured"},
-                {status: 400}
-            );
-        }
-
-        if (!lat || !lng) {
-            return NextResponse.json(
-                {status: 400, error: true, msg: "Location coordinates are required for mobile login"},
-                {status: 400}
-            );
-        }
+        const {userId, checkedInPlace, checkedInTime} = validation.data;
 
         const location = await prisma.location.findFirst({
             where: {
-                id: user.locationId,
+                id: userInfo.locationId as number,
             },
         });
-
         if (!location) {
             return NextResponse.json(
                 {status: 404, error: true, msg: "Location not found"},
@@ -67,7 +63,7 @@ export async function POST(req: NextRequest) {
             return R * c; // Distance in meters
         };
 
-        const distance = calculateDistance(lat, lng, location.lat, location.lng);
+        const distance = calculateDistance(checkedInPlace?.position?.lat, checkedInPlace?.position?.lng, location.lat, location.lng);
 
         if (distance > location.maxRadius) {
             return NextResponse.json(
@@ -75,12 +71,22 @@ export async function POST(req: NextRequest) {
                 {status: 403}
             );
         }
+
+        const activityLog = await prisma.activityLog.create({
+            data: {
+                userId: userInfo.id,
+                action: "Checked-In" as string,
+                checkedInPlace,
+                checkedInTime,
+            },
+        })
+
         return NextResponse.json(
             {
                 status: 200,
                 error: false,
-                msg: "Login successful",
-                data: {}
+                msg: "Checked-In successful",
+                data: activityLog
             },
             {status: 200}
         );

@@ -30,6 +30,7 @@ export const verifyAuth = async (req: NextRequest) => {
           status: true,
           position: true,
           fcm_token: true,
+          locationId: true,
           password: false,
         },
       });

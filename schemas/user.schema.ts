@@ -39,6 +39,7 @@ export const UserSchema = z.object({
     createdAt: z.date().optional(),
     updatedAt: z.date().optional(),
     isDeleted: z.boolean().default(false),
+    locationId: z.number().int().optional(),
 });
 
 export type User = z.infer<typeof UserSchema>;
