@@ -1,18 +1,16 @@
 import {prisma} from "@/lib/prisma";
 import {NextRequest, NextResponse} from "next/server";
-import {CreateUserWithOtpSchema} from "@/schemas/user.schema";
+import {signAuthToken} from "@/lib/auth";
 
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
-        const validation = CreateUserWithOtpSchema.safeParse(body);
-        if (!validation.success) {
+        if (!body?.otp || !body?.email || !body?.action) {
             return NextResponse.json(
                 {
                     status: 400,
                     error: true,
                     msg: "Invalid input data",
-                    errors: validation.error.errors,
                 },
                 {status: 400}
             );
@@ -20,7 +18,7 @@ export async function POST(request: NextRequest) {
         // check if OTP is valid
         const optRecord = await prisma.otp.findFirst({
             where: {
-                email: body?.email.toLowerCase().trim(), action: body?.action
+                email: body?.email.toLowerCase().trim(), action: body?.action, otp: body?.otp,
             },
         });
         if (!optRecord || optRecord.otp !== body?.otp) {
@@ -40,8 +38,24 @@ export async function POST(request: NextRequest) {
                 {status: 400}
             );
         }
+        const user = await prisma.user.findFirst({
+            where: {
+                email: body?.email.toLowerCase().trim(),
+            },
+        });
+        if (!user) {
+            return NextResponse.json(
+                {status: 404, error: true, msg: "User not found! Please register."},
+                {status: 404}
+            );
+        }
+        const token = await signAuthToken({
+            userId: user.id,
+            email: user.email,
+            role: user.role,
+        });
         const response = NextResponse.json(
-            {status: 200, error: false, msg: "OTP verification success"},
+            {status: 200, error: false, msg: "OTP verification success", data: {accessToken: token}},
             {status: 200}
         );
         return response;
