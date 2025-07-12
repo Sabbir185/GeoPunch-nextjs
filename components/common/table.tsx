@@ -170,7 +170,7 @@ const Table: React.FC<TableProps> = ({
                                             <tr key={index}>
                                                 {indexed && (
                                                     <td className="p-2 whitespace-nowrap text-gray-500">
-                                                        {(pagination ? (data?.page - 1) * data.limit : 0) + index + 1}
+                                                        {(pagination ? (data?.pagination?.page - 1) * data?.pagination?.limit : 0) + index + 1}
                                                     </td>
                                                 )}
                                                 {cols?.map((column, index) => (

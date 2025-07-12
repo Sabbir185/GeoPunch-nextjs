@@ -43,6 +43,7 @@ export const UserSchema = z.object({
     activityStatus: z.string().optional(),
     lastActivity: z.date().optional(),
     activityId: z.number().optional(),
+    activityPlace: z.string().optional(),
 });
 
 export type User = z.infer<typeof UserSchema>;

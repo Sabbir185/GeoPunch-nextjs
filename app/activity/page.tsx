@@ -1,6 +1,8 @@
 "use client";
 import React, {useState} from 'react';
 import Table, {TableImage} from "@/components/common/table";
+import {useFetch} from "@/hooks/userAction";
+import {fetchUserActivityList} from "@/utils/backend_helper";
 
 interface User {
     id: number;
@@ -15,64 +17,11 @@ interface User {
 }
 
 export default function ActivityPage() {
-    const [users] = useState<User[]>([
-        {
-            id: 1,
-            name: 'John Doe',
-            email: 'john.doe@example.com',
-            phone: '+1 (555) 123-4567',
-            department: 'Engineering',
-            designation: 'Senior Developer',
-            image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
-            createdAt: '2024-01-15T09:30:00Z',
-            status: 'active'
-        },
-        {
-            id: 2,
-            name: 'Jane Smith',
-            email: 'jane.smith@example.com',
-            phone: '+1 (555) 987-6543',
-            department: 'Design',
-            designation: 'UI/UX Designer',
-            image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
-            createdAt: '2024-01-10T14:22:00Z',
-            status: 'active'
-        },
-        {
-            id: 3,
-            name: 'Mike Johnson',
-            email: 'mike.johnson@example.com',
-            phone: '+1 (555) 456-7890',
-            department: 'Marketing',
-            designation: 'Marketing Manager',
-            image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face',
-            createdAt: '2024-01-08T16:30:00Z',
-            status: 'inactive'
-        },
-        {
-            id: 4,
-            name: 'Sarah Wilson',
-            email: 'sarah.wilson@example.com',
-            phone: '+1 (555) 234-5678',
-            department: 'HR',
-            designation: 'HR Specialist',
-            image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
-            createdAt: '2024-01-12T10:15:00Z',
-            status: 'active'
-        },
-        {
-            id: 5,
-            name: 'David Brown',
-            email: 'david.brown@example.com',
-            phone: '+1 (555) 345-6789',
-            department: 'Engineering',
-            designation: 'DevOps Engineer',
-            image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face',
-            createdAt: '2024-01-18T08:45:00Z',
-            status: 'active'
-        }
-    ]);
-
+    const [data, getData, {error, loading}] = useFetch(fetchUserActivityList)
+    const colors: any = {
+        'Checked-Out': 'text-yellow-600',
+        'Checked-In': 'text-teal-600',
+    }
     const columns = [
         {
             text: "Image",
@@ -83,19 +32,31 @@ export default function ActivityPage() {
         },
         {text: "Name", dataField: "name"},
         {text: "Email", dataField: "email"},
-        {text: "Phone", dataField: "phone"},
+        // {text: "Phone", dataField: "phone"},
         {text: "Department", dataField: "department"},
         {text: "Designation", dataField: "designation"},
         {
+            text: "Activity",
+            dataField: "activityStatus",
+            formatter: (value: string) => <span className={`capitalize ${colors[value]}`}>{value}</span>
+        },
+        {
+            text: "Active Place",
+            dataField: "activityPlace",
+            formatter: (value: string) => <span className={`capitalize border px-2 py-1 rounded-md`}>{value || "N/A"}</span>
+        },
+        {
             text: "Last Online",
-            dataField: "createdAt",
-            formatter: (value: string) => new Date(value).toDateString() ?? "--"
+            dataField: "lastActivity",
+            formatter: (value: string) => new Date(value).toLocaleString() ?? "--"
         },
     ];
 
-    const activeUsers = users.filter(user => user.status === 'active').length;
-    const inactiveUsers = users.filter(user => user.status === 'inactive').length;
-    const totalUsers = users.length;
+    console.log(data)
+
+    const activeUsers = data?.docs?.filter((user: any) => user?.status === 'ACTIVE').length;
+    const inactiveUsers = data?.docs?.filter((user: any) => (user?.status === 'INACTIVE' || user?.status === 'SUSPENDED')).length;
+    const totalUsers = data?.docs?.length;
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
@@ -164,10 +125,12 @@ export default function ActivityPage() {
                     </div>
                     <Table
                         columns={columns}
-                        data={{docs: users}}
+                        data={data}
                         indexed
                         pagination
                         noActions={true}
+                        onReload={getData}
+                        loading={loading}
                     />
                 </div>
             </div>

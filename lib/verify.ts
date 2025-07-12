@@ -33,6 +33,7 @@ export const verifyAuth = async (req: NextRequest) => {
           locationId: true,
           activityId: true,
           password: false,
+          activityPlace: true,
         },
       });
       return user;

@@ -19,13 +19,14 @@ export async function PATCH(req: NextRequest) {
             );
         }
         const {activityId} = await req.json();
-        console.log(activityId);
+        const activity = await prisma.currentPlace.findUnique({where: {id: activityId}});
         await prisma.user.update({
             where: {
                 id: user.id,
             },
             data: {
                 activityId,
+                activityPlace: activity?.name,
             },
         });
         return NextResponse.json(

@@ -1,10 +1,24 @@
 import {NextRequest, NextResponse} from "next/server";
 import {logEvent} from "@/utils/sentry";
 import {prisma} from "@/lib/prisma";
+import {verifyAuth} from "@/lib/verify";
 
 export async function GET(req: NextRequest) {
     try {
-        const data = await prisma.activityLog.findMany({orderBy: {createdAt: "desc"}});
+        const user = await verifyAuth(req);
+        if (!user || user?.role !== "USER") {
+            logEvent(
+                "Unauthorized access",
+                "auth",
+                {user: "unauthorized"},
+                "warning"
+            );
+            return NextResponse.json(
+                {status: 401, error: true, msg: "Unauthorized access"},
+                {status: 401}
+            );
+        }
+        const data = await prisma.activityLog.findMany({where: {userId: user.id}, orderBy: {createdAt: "desc"}});
         if (!data) {
             return NextResponse.json(
                 {status: 404, error: true, msg: "Data not found!"},

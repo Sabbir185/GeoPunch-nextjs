@@ -28,3 +28,5 @@ export const updatePlace = (data: Record<string, unknown>) => patch('/place-of-p
 export const delPlace = (data: Record<string, unknown>) => del('/place-of-presence', data)
 export const createPlace = (data: Record<string, unknown>) => post('/place-of-presence', data)
 
+export const fetchUserActivityList = (data: Record<string, unknown>) => get('/user/activity', data)
+
