@@ -32,6 +32,7 @@ model User {
   fcm_token      String?
   locationId     Int?
   ActivityLog    ActivityLog[]
+  activityId     Int?
   lastActivity   DateTime?
   activityStatus String? // e.g., "Checked-In", "Checked-Out"
 }
@@ -74,6 +75,7 @@ model Location {
 model CurrentPlace {
   id        Int      @id @default(autoincrement())
   name      String
+  type      String? // e.g., "common", "additional",
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

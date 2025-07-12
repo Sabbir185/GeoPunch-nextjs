@@ -15,12 +15,21 @@ import {delPlace, fetchPlaceList} from "@/utils/backend_helper";
 function PlaceTable() {
     const [data, getData, {loading, error}] = useFetch(fetchPlaceList)
     const router = useRouter();
+    const colors: any = {
+        'common': 'text-yellow-600',
+        'additional': 'text-teal-600',
+    }
     const columns = [
         {text: "Name", dataField: "name"},
         {
             text: "Created At",
             dataField: "createdAt",
             formatter: (value: string) => new Date(value).toDateString() ?? "--"
+        },
+        {
+            text: "Type",
+            dataField: "type",
+            formatter: (value: string) => <span className={`capitalize ${colors[value]}`}>{value}</span>
         },
         {
             text: "Updated At",

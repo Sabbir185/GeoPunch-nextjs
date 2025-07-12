@@ -18,10 +18,11 @@ export async function POST(req: NextRequest) {
                 {status: 401}
             );
         }
-        const {name} = await req.json();
+        const {name, type} = await req.json();
         const location = await prisma.currentPlace.create({
             data: {
                 name,
+                type
             },
         });
         return NextResponse.json(
@@ -64,11 +65,12 @@ export async function PATCH(req: NextRequest) {
                 {status: 401}
             );
         }
-        const {name, id} = await req.json();
+        const {name, id, type} = await req.json();
         const location = await prisma.currentPlace.update({
             where: {id},
             data: {
-                name
+                name,
+                type
             },
         });
         return NextResponse.json(
