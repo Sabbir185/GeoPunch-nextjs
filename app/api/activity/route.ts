@@ -5,6 +5,9 @@ import {verifyAuth} from "@/lib/verify";
 
 export async function GET(req: NextRequest) {
     try {
+        const {searchParams} = new URL(req.url);
+        const year = searchParams.get("year");
+        const month = searchParams.get("month");
         const user = await verifyAuth(req);
         if (!user || user?.role !== "USER") {
             logEvent(
@@ -18,7 +21,18 @@ export async function GET(req: NextRequest) {
                 {status: 401}
             );
         }
-        const data = await prisma.activityLog.findMany({where: {userId: user.id}, orderBy: {createdAt: "desc"}});
+        const data = await prisma.activityLog.findMany({
+            where: {
+                userId: user.id,
+                ...(year && month && {
+                    checkedInTime: {
+                        gte: new Date(parseInt(year), parseInt(month) - 1, 1),
+                        lt: new Date(parseInt(year), parseInt(month), 1)
+                    }
+                })
+            },
+            orderBy: {createdAt: "desc"}
+        });
         if (!data) {
             return NextResponse.json(
                 {status: 404, error: true, msg: "Data not found!"},
