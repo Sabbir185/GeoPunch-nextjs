@@ -109,6 +109,7 @@ export const UpdateUserProfileSchema = z
         designation: z
             .string({invalid_type_error: "Designation must be a string"})
             .optional(),
+        isDeleted: z.boolean().optional(),
     })
     .strict();
 
