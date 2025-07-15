@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { uploadFile } from "@/utils/gcs.service";
-import { writeFile, unlink } from "fs/promises";
-import { join } from "path";
+import { uploadFileFromBuffer } from "@/utils/gcs.service";
 
 // Helper function to generate datetime-based filename
 function generateDateTimeFileName(originalName: string): string {
@@ -54,28 +52,10 @@ export async function POST(req: NextRequest) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // Create temporary file path with datetime
-    const tempDir = join(process.cwd(), "tmp");
-    const tempFileName = generateDateTimeFileName(file.name);
-    const tempFilePath = join(tempDir, tempFileName);
-
-    // Ensure tmp directory exists
     try {
-      await writeFile(tempFilePath, buffer);
-    } catch (error) {
-      // If tmp directory doesn't exist, create it
-      const { mkdir } = await import("fs/promises");
-      await mkdir(tempDir, { recursive: true });
-      await writeFile(tempFilePath, buffer);
-    }
-
-    try {
-      // Upload to GCS with datetime-based filename
+      // Upload directly to GCS using buffer stream
       const gcsFileName = `uploads/${generateDateTimeFileName(file.name)}`;
-      const publicUrl = await uploadFile(tempFilePath, gcsFileName);
-
-      // Clean up temporary file
-      await unlink(tempFilePath);
+      const publicUrl = await uploadFileFromBuffer(buffer, gcsFileName, file.type);
 
       return NextResponse.json({
         message: "File uploaded successfully",
@@ -86,12 +66,7 @@ export async function POST(req: NextRequest) {
         uploadedAt: new Date().toISOString(),
       });
     } catch (uploadError) {
-      // Clean up temporary file even if upload fails
-      try {
-        await unlink(tempFilePath);
-      } catch (cleanupError) {
-        console.error("Failed to cleanup temp file:", cleanupError);
-      }
+      console.error("Upload error:", uploadError);
       throw uploadError;
     }
   } catch (error) {

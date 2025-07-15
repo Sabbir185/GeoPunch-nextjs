@@ -1,5 +1,6 @@
 import { Storage } from "@google-cloud/storage";
 import path from "path";
+import { Readable } from "stream";
 
 const keyPath = path.join(
   process.cwd(),
@@ -68,4 +69,38 @@ export const updateFile = async (
 ): Promise<string> => {
   await deleteFile(oldFileName);
   return await uploadFile(newLocalPath, oldFileName);
+};
+
+/**
+ * Upload a file buffer directly to GCS bucket using stream.
+ * @param buffer - File buffer to upload
+ * @param destFileName - Path (and name) to save as in GCS (e.g., "folder/myfile.jpg")
+ * @param contentType - MIME type of the file
+ * @returns Public URL of uploaded file
+ */
+export const uploadFileFromBuffer = async (
+  buffer: Buffer,
+  destFileName: string,
+  contentType: string
+): Promise<string> => {
+  const file = storage.bucket(bucketName).file(destFileName);
+
+  const stream = file.createWriteStream({
+    metadata: {
+      contentType,
+      cacheControl: "public, max-age=31536000",
+    },
+    resumable: false,
+  });
+
+  return new Promise((resolve, reject) => {
+    const readable = Readable.from(buffer);
+
+    readable
+      .pipe(stream)
+      .on("error", reject)
+      .on("finish", () => {
+        resolve(`https://storage.googleapis.com/${bucketName}/${destFileName}`);
+      });
+  });
 };
