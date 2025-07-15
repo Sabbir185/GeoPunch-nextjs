@@ -1,5 +1,6 @@
 "use client"
 
+import React, { useEffect, useState } from "react";
 import {TrendingUp} from "lucide-react"
 import {Area, AreaChart, CartesianGrid, XAxis} from "recharts"
 
@@ -20,29 +21,80 @@ import {
 
 export const description = "A simple area chart"
 
-const chartData = [
-    {month: "January", desktop: 186},
-    {month: "February", desktop: 305},
-    {month: "March", desktop: 237},
-    {month: "April", desktop: 73},
-    {month: "May", desktop: 209},
-    {month: "June", desktop: 214},
-]
+interface ChartData {
+    month: string;
+    checkins: number; // Changed from 'desktop' to 'checkins'
+}
 
 const chartConfig = {
-    desktop: {
-        label: "Desktop",
+    checkins: {
+        label: "Check-ins",
         color: "var(--chart-1)",
     },
 } satisfies ChartConfig
 
 export function ChartAreaDefault() {
+    const [chartData, setChartData] = useState<ChartData[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchAttendanceData = async () => {
+            try {
+                const response = await fetch('/api/dashboard/attendance');
+                const data = await response.json();
+                if (data && data.length > 0) {
+                    setChartData(data);
+                } else {
+                    // Fallback data when no data is available
+                    setChartData([
+                        { month: "January", checkins: 0 },
+                        { month: "February", checkins: 0 },
+                        { month: "March", checkins: 0 },
+                        { month: "April", checkins: 0 },
+                        { month: "May", checkins: 0 },
+                        { month: "June", checkins: 0 },
+                    ]);
+                }
+            } catch (error) {
+                console.error('Error fetching attendance data:', error);
+                // Fallback data on error
+                setChartData([
+                    { month: "January", checkins: 0 },
+                    { month: "February", checkins: 0 },
+                    { month: "March", checkins: 0 },
+                    { month: "April", checkins: 0 },
+                    { month: "May", checkins: 0 },
+                    { month: "June", checkins: 0 },
+                ]);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchAttendanceData();
+    }, []);
+
+    if (loading) {
+        return (
+            <Card>
+                <CardHeader>
+                    <CardTitle>Attendance Overview</CardTitle>
+                    <CardDescription>
+                        Showing attendance for the last 6 months
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <div className="h-[250px] w-full bg-gray-100 animate-pulse rounded"></div>
+                </CardContent>
+            </Card>
+        );
+    }
     return (
         <Card>
             <CardHeader>
                 <CardTitle>Attendance Overview</CardTitle>
                 <CardDescription>
-                    Showing attendance for the last 6 months
+                    Monthly check-in records from ActivityLog for the last 6 months
                 </CardDescription>
             </CardHeader>
             <CardContent>
@@ -69,11 +121,11 @@ export function ChartAreaDefault() {
                             content={<ChartTooltipContent indicator="line"/>}
                         />
                         <Area
-                            dataKey="desktop"
+                            dataKey="checkins"
                             type="natural"
-                            fill="var(--color-desktop)"
+                            fill="var(--color-checkins)"
                             fillOpacity={0.4}
-                            stroke="var(--color-desktop)"
+                            stroke="var(--color-checkins)"
                         />
                     </AreaChart>
                 </ChartContainer>
@@ -85,7 +137,7 @@ export function ChartAreaDefault() {
                             Trending up by 5.2% this month <TrendingUp className="h-4 w-4"/>
                         </div>
                         <div className="text-muted-foreground flex items-center gap-2 leading-none">
-                            January - June 2024
+                            Last 6 months attendance data
                         </div>
                     </div>
                 </div>

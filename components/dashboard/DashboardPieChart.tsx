@@ -21,32 +21,30 @@ import {
 
 export const description = "A donut chart with text"
 
-const chartData = [
-    {browser: "chrome", visitors: 275, fill: "var(--color-chrome)"},
-    {browser: "safari", visitors: 200, fill: "var(--color-safari)"},
-    {browser: "firefox", visitors: 287, fill: "var(--color-firefox)"},
-    {browser: "edge", visitors: 173, fill: "var(--color-edge)"},
-    {browser: "other", visitors: 190, fill: "var(--color-other)"},
-]
+interface ChartData {
+    browser: string;
+    visitors: number;
+    fill: string;
+}
 
 const chartConfig = {
     visitors: {
-        label: "Visitors",
+        label: "Users",
     },
     chrome: {
-        label: "Chrome",
+        label: "Department 1",
         color: "var(--chart-1)",
     },
     safari: {
-        label: "Safari",
+        label: "Department 2",
         color: "var(--chart-2)",
     },
     firefox: {
-        label: "Firefox",
+        label: "Department 3",
         color: "var(--chart-3)",
     },
     edge: {
-        label: "Edge",
+        label: "Department 4",
         color: "var(--chart-4)",
     },
     other: {
@@ -56,15 +54,59 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export function ChartPieDonutText() {
+    const [chartData, setChartData] = React.useState<ChartData[]>([]);
+    const [loading, setLoading] = React.useState(true);
+
+    React.useEffect(() => {
+        const fetchUserDistribution = async () => {
+            try {
+                const response = await fetch('/api/dashboard/user-distribution');
+                const data = await response.json();
+                if (data && data.length > 0) {
+                    setChartData(data);
+                } else {
+                    // Fallback data when no data is available
+                    setChartData([
+                        { browser: "No Data", visitors: 1, fill: "var(--chart-1)" }
+                    ]);
+                }
+            } catch (error) {
+                console.error('Error fetching user distribution data:', error);
+                // Fallback data on error
+                setChartData([
+                    { browser: "No Data", visitors: 1, fill: "var(--chart-1)" }
+                ]);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchUserDistribution();
+    }, []);
+
     const totalVisitors = React.useMemo(() => {
         return chartData.reduce((acc, curr) => acc + curr.visitors, 0)
-    }, [])
+    }, [chartData]);
+
+    if (loading) {
+        return (
+            <Card className="flex flex-col">
+                <CardHeader className="items-center pb-0">
+                    <CardTitle>User Distribution</CardTitle>
+                    <CardDescription>By Department</CardDescription>
+                </CardHeader>
+                <CardContent className="flex-1 pb-0">
+                    <div className="mx-auto aspect-square max-h-[250px] bg-gray-100 animate-pulse rounded-full"></div>
+                </CardContent>
+            </Card>
+        );
+    }
 
     return (
         <Card className="flex flex-col">
             <CardHeader className="items-center pb-0">
-                <CardTitle>Visitors History</CardTitle>
-                <CardDescription>Jan - Jul 2025</CardDescription>
+                <CardTitle>User Distribution</CardTitle>
+                <CardDescription>By Department</CardDescription>
             </CardHeader>
             <CardContent className="flex-1 pb-0">
                 <ChartContainer
@@ -105,7 +147,7 @@ export function ChartPieDonutText() {
                                                     y={(viewBox.cy || 0) + 24}
                                                     className="fill-muted-foreground"
                                                 >
-                                                    Visitors
+                                                    Users
                                                 </tspan>
                                             </text>
                                         )
@@ -121,7 +163,7 @@ export function ChartPieDonutText() {
                     Trending up by 5.2% this month <TrendingUp className="h-4 w-4"/>
                 </div>
                 <div className="text-muted-foreground leading-none">
-                    Showing total visitors for the last 6 months
+                    Showing user distribution by department
                 </div>
             </CardFooter>
         </Card>
