@@ -31,7 +31,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           // }
         } else {
           setUser(null);
-          router.push("/login");
+          // router.push("/login");
         }
       } catch (error) {
         console.error("Error verifying user:", error);

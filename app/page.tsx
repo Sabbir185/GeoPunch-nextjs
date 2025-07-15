@@ -1,5 +1,5 @@
-import Login from "./login/page";
+import ActivityLayout from "./activity/layout";
 
 export default function Home() {
-  return <Login />;
+  return <ActivityLayout />;
 }
