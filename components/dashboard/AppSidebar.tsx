@@ -13,6 +13,7 @@ import {
     MapPin,
     LocateFixed,
     Settings,
+    Mail,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -40,10 +41,15 @@ const navItems = [
         icon: <MapPin size={20}/>,
         href: "/dashboard/locations",
     },
+    // {
+    //     title: "Reports",
+    //     icon: <FileBarChart size={20}/>,
+    //     href: "/dashboard/reports",
+    // },
     {
-        title: "Reports",
-        icon: <FileBarChart size={20}/>,
-        href: "/dashboard/reports",
+        title: "Email Logs",
+        icon: <Mail size={20}/>,
+        href: "/dashboard/email-logs",
     },
     {
         title: "Settings",

@@ -107,6 +107,7 @@ export default function ActivityPage() {
           to: selectedUserEmail,
           subject: emailSubject,
           html: emailBody.replace(/\n/g, "<br>"),
+          recipientName: selectedUserName,
         }),
       });
 
@@ -127,7 +128,7 @@ export default function ActivityPage() {
       toast.error("Failed to send email. Please try again.", { id: toastId });
     } finally {
       setSendingEmail(false);
-      toast.dismiss(toastId);
+      // Don't dismiss the toast here - let it show for the specified duration
     }
   };
 

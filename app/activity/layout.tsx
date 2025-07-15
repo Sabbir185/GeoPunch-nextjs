@@ -43,7 +43,7 @@ export default function ActivityLayout({children}: { children?: React.ReactNode 
 
                         {/* Desktop Navigation */}
                         <div className="hidden md:block">
-                            <div className="ml-10 flex items-baseline space-x-8">
+                            <div className="ml-10 flex items-center space-x-8">
                                 <Link
                                     href="/activity"
                                     className="text-gray-900 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"

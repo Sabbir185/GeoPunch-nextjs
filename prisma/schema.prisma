@@ -94,6 +94,21 @@ model ActivityLog {
   updatedAt       DateTime  @updatedAt
 }
 
+model EmailLog {
+  id             Int      @id @default(autoincrement())
+  recipientEmail String
+  recipientName  String?
+  subject        String
+  body           String   @db.Text
+  senderEmail    String
+  senderName     String?
+  senderType     String // "firebase" or "admin"
+  emailId        String? // External email service ID
+  status         String   @default("sent") // "sent", "failed", "pending"
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
 enum UserStatus {
   PENDING
   ACTIVE

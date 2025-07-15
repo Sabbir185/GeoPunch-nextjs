@@ -30,3 +30,6 @@ export const createPlace = (data: Record<string, unknown>) => post('/place-of-pr
 
 export const fetchUserActivityList = (data: Record<string, unknown>) => get('/user/activity', data)
 
+// Email logs
+export const fetchEmailLogList = (data: Record<string, unknown>) => get('/email/logs', data)
+

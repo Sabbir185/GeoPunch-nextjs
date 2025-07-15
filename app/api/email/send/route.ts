@@ -2,28 +2,83 @@ import { NextRequest, NextResponse } from "next/server";
 import { sendEmail } from "@/lib/resend";
 import { getCurrentUser } from "@/lib/current-user";
 import { logEvent } from "@/utils/sentry";
+import { prisma } from "@/lib/prisma";
+import * as fs from 'fs';
+import * as path from 'path';
+import { ServiceAccount } from 'firebase-admin';
+
+// Initialize Firebase Admin if not already initialized
+let adminAuth: any = null;
+
+async function initializeFirebaseAdmin() {
+  if (!adminAuth) {
+    try {
+      const admin = await import('firebase-admin');
+      
+      if (!admin.apps.length) {
+        // Initialize Firebase Admin with service account file
+        try {
+          const serviceAccountPath = path.join(process.cwd(), 'lib', 'firebaseGeoPunchAdmin.json');
+          const serviceAccountKey = fs.readFileSync(serviceAccountPath, 'utf8');
+          const serviceAccount = JSON.parse(serviceAccountKey);
+          
+          admin.initializeApp({
+            credential: admin.credential.cert(serviceAccount as ServiceAccount),
+          });
+        } catch (credentialError) {
+          console.error('Error loading Firebase service account credentials:', credentialError);
+          return null;
+        }
+      }
+      
+      adminAuth = admin.auth();
+    } catch (error) {
+      console.error('Firebase Admin initialization error:', error);
+      return null;
+    }
+  }
+  return adminAuth;
+}
+
+async function verifyFirebaseToken(idToken: string): Promise<any> {
+  try {
+    const admin = await initializeFirebaseAdmin();
+    if (!admin) {
+      console.log('Firebase Admin not available, token verification failed');
+      return null;
+    }
+    
+    const decodedToken = await admin.verifyIdToken(idToken);
+    return decodedToken;
+  } catch (error) {
+    console.error('Token verification error:', error);
+    return null;
+  }
+}
 
 export async function POST(request: NextRequest) {
   try {
     const authHeader = request.headers.get('Authorization');
-    let isFirebaseUser = false;
+    let firebaseUser = null;
     let adminUser = null;
 
-    // Check for Firebase authentication header
+    // Check for Firebase authentication first
     if (authHeader && authHeader.startsWith('Bearer ')) {
-      // For now, we'll assume if they have a Bearer token, they're authenticated
-      // In a production environment, you should verify the token properly
-      isFirebaseUser = true;
-      console.log('Firebase user authenticated via Bearer token');
+      const idToken = authHeader.substring(7);
+      firebaseUser = await verifyFirebaseToken(idToken);
+      
+      if (!firebaseUser) {
+        console.log('Firebase token verification failed');
+      }
     }
 
     // If no Firebase user, check for admin authentication
-    if (!isFirebaseUser) {
+    if (!firebaseUser) {
       adminUser = await getCurrentUser();
     }
 
     // Must have either Firebase user or admin user
-    if (!isFirebaseUser && !adminUser?.email) {
+    if (!firebaseUser && !adminUser?.email) {
       logEvent(
         "Unauthorized email send attempt",
         "email",
@@ -37,7 +92,7 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json();
-    const { to, subject, html } = body;
+    const { to, subject, html, recipientName } = body;
 
     // Validate input
     if (!to || !subject || !html) {
@@ -57,8 +112,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Determine sender info
-    const senderName = isFirebaseUser ? 'Firebase User' : (adminUser?.name || adminUser?.email);
-    const senderEmail = isFirebaseUser ? 'firebase@geopunch.com' : adminUser?.email;
+    const senderName = firebaseUser?.name || firebaseUser?.email || adminUser?.name || adminUser?.email;
+    const senderEmail = firebaseUser?.email || adminUser?.email;
 
     // Send email
     const { data, error } = await sendEmail({
@@ -88,6 +143,26 @@ export async function POST(request: NextRequest) {
 
     if (error) {
       console.error("Email sending error:", error);
+      
+      // Log failed email to database
+      try {
+        await prisma.emailLog.create({
+          data: {
+            recipientEmail: to,
+            recipientName: recipientName || null,
+            subject,
+            body: html,
+            senderEmail: senderEmail || 'unknown',
+            senderName: senderName || null,
+            senderType: firebaseUser ? 'firebase' : 'admin',
+            status: 'failed',
+            emailId: null,
+          },
+        });
+      } catch (dbError) {
+        console.error("Failed to log email to database:", dbError);
+      }
+      
       logEvent(
         "Email sending failed",
         "email",
@@ -98,6 +173,26 @@ export async function POST(request: NextRequest) {
         { status: 500, error: true, msg: "Failed to send email" },
         { status: 500 }
       );
+    }
+
+    // Log successful email to database
+    try {
+      await prisma.emailLog.create({
+        data: {
+          recipientEmail: to,
+          recipientName: recipientName || null,
+          subject,
+          body: html,
+          senderEmail: senderEmail || 'unknown',
+          senderName: senderName || null,
+          senderType: firebaseUser ? 'firebase' : 'admin',
+          status: 'sent',
+          emailId: data?.id || null,
+        },
+      });
+    } catch (dbError) {
+      console.error("Failed to log email to database:", dbError);
+      // Don't fail the request if logging fails
     }
 
     // Log successful email sending
