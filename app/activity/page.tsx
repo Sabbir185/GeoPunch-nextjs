@@ -16,6 +16,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { Mail } from "lucide-react";
+import { useFirebaseAuth } from "@/contexts/FirebaseAuthContext";
+import GoogleAuthModal from "@/components/auth/GoogleAuthModal";
 
 interface User {
   id: number;
@@ -32,11 +34,13 @@ interface User {
 export default function ActivityPage() {
   const [data, getData, { error, loading }] = useFetch(fetchUserActivityList);
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [selectedUserEmail, setSelectedUserEmail] = useState("");
   const [selectedUserName, setSelectedUserName] = useState("");
   const [emailSubject, setEmailSubject] = useState("");
   const [emailBody, setEmailBody] = useState("");
   const [sendingEmail, setSendingEmail] = useState(false);
+  const { user, loading: authLoading } = useFirebaseAuth();
 
   const colors: any = {
     "Checked-Out": "text-yellow-600",
@@ -44,12 +48,24 @@ export default function ActivityPage() {
   };
 
   const handleEmailClick = (email: string, name: string) => {
+    if (!user) {
+      toast.error("Please sign in with Google to send emails");
+      setIsAuthModalOpen(true);
+      return;
+    }
+
     setSelectedUserEmail(email);
     setSelectedUserName(name);
     setIsEmailModalOpen(true);
   };
 
   const handleSendEmail = async () => {
+    if (!user) {
+      toast.error("Please sign in with Google to send emails");
+      setIsAuthModalOpen(true);
+      return;
+    }
+
     if (!emailSubject.trim() || !emailBody.trim()) {
       toast.error("Please fill in both subject and message");
       return;
@@ -64,14 +80,29 @@ export default function ActivityPage() {
       toast.error("Message must be less than 1000 characters");
       return;
     }
+
     const toastId = toast.loading("Sending email...");
     setSendingEmail(true);
+
     try {
+      // Get Firebase ID token for authentication
+      const authHeaders: any = {
+        "Content-Type": "application/json",
+      };
+
+      if (user) {
+        try {
+          const idToken = await user.getIdToken();
+          authHeaders["Authorization"] = `Bearer ${idToken}`;
+        } catch (tokenError) {
+          console.error("Error getting Firebase token:", tokenError);
+          // Continue without token - let the API handle it
+        }
+      }
+
       const response = await fetch("/api/email/send", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: authHeaders,
         body: JSON.stringify({
           to: selectedUserEmail,
           subject: emailSubject,
@@ -84,13 +115,16 @@ export default function ActivityPage() {
       if (result.error) {
         toast.error(result.msg || "Failed to send email", { id: toastId });
       } else {
-        toast.success("Email sent successfully!", { id: toastId });
+        toast.success("Email sent successfully!", {
+          id: toastId,
+          duration: 10000,
+        });
         setIsEmailModalOpen(false);
         setEmailSubject("");
         setEmailBody("");
       }
     } catch (error) {
-      toast.error("Failed to send email. Please try again.");
+      toast.error("Failed to send email. Please try again.", { id: toastId });
     } finally {
       setSendingEmail(false);
       toast.dismiss(toastId);
@@ -354,6 +388,13 @@ export default function ActivityPage() {
             </div>
           </DialogContent>
         </Dialog>
+
+        {/* Google Auth Modal */}
+        <GoogleAuthModal
+          isOpen={isAuthModalOpen}
+          onClose={() => setIsAuthModalOpen(false)}
+          onSuccess={() => setIsAuthModalOpen(false)}
+        />
       </div>
     </div>
   );

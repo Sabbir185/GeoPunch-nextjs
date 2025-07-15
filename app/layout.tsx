@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Syne, Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { FirebaseAuthProvider } from "@/contexts/FirebaseAuthContext";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -42,7 +43,9 @@ export default function RootLayout({
         cz-shortcut-listen="true"
       >
         <Toaster />
-        <AuthProvider>{children}</AuthProvider>
+        <FirebaseAuthProvider>
+          <AuthProvider>{children}</AuthProvider>
+        </FirebaseAuthProvider>
       </body>
     </html>
   );
