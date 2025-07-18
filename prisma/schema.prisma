@@ -24,7 +24,7 @@ model User {
   address        String?
   department     String?
   designation    String?
-  position       Json? // Store as { lat: number, lng: number }
+  position       Json? // Store as { address, lat: number, lng: number }
   status         UserStatus    @default(ACTIVE)
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
@@ -36,6 +36,7 @@ model User {
   lastActivity   DateTime?
   activityStatus String? // e.g., "Checked-In", "Checked-Out"
   activityPlace  String?
+  isAuto         Boolean       @default(false)
 }
 
 model Otp {
