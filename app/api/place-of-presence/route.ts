@@ -6,7 +6,8 @@ import {NextRequest, NextResponse} from "next/server";
 export async function POST(req: NextRequest) {
     try {
         const user = await verifyAuth(req);
-        if (!user || user?.role !== "ADMIN") {
+        const permissions = ["ADMIN", "USER"];
+        if (!user || !permissions.includes(user?.role)) {
             logEvent(
                 "Unauthorized access",
                 "auth",
