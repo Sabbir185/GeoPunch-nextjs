@@ -29,6 +29,7 @@ export const delPlace = (data: Record<string, unknown>) => del('/place-of-presen
 export const createPlace = (data: Record<string, unknown>) => post('/place-of-presence', data)
 
 export const fetchUserActivityList = (data: Record<string, unknown>) => get('/user/activity', data)
+export const fetchActivityListAdmin = (data: Record<string, unknown>) => get('/attendance-logs', data)
 
 // Email logs
 export const fetchEmailLogList = (data: Record<string, unknown>) => get('/email/logs', data)

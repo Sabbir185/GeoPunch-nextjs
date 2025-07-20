@@ -14,6 +14,7 @@ import {
     LocateFixed,
     Settings,
     Mail,
+    Activity,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -40,6 +41,11 @@ const navItems = [
         title: "Locations",
         icon: <MapPin size={20}/>,
         href: "/dashboard/locations",
+    },
+    {
+        title: "Attendance Logs",
+        icon: <Activity size={20}/>,
+        href: "/dashboard/attendance-logs",
     },
     // {
     //     title: "Reports",
