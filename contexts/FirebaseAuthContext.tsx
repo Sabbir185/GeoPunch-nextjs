@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from 'react';
-import { auth, googleProvider } from '@/lib/firebase';
+import { auth, googleProvider, isFirebaseConfigured } from '@/lib/firebase';
 import { 
   User, 
   signInWithPopup, 
@@ -36,6 +36,11 @@ export const FirebaseAuthProvider = ({ children }: { children: React.ReactNode }
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!isFirebaseConfigured) {
+      setLoading(false);
+      return;
+    }
+
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
       setLoading(false);
@@ -45,6 +50,9 @@ export const FirebaseAuthProvider = ({ children }: { children: React.ReactNode }
   }, []);
 
   const signInWithGoogle = async (): Promise<User | null> => {
+    if (!isFirebaseConfigured) {
+      throw new Error('Firebase is not configured. Set NEXT_PUBLIC_FIREBASE_* env vars to enable Google sign-in.');
+    }
     try {
       const result = await signInWithPopup(auth, googleProvider);
       return result.user;
@@ -55,6 +63,7 @@ export const FirebaseAuthProvider = ({ children }: { children: React.ReactNode }
   };
 
   const signOut = async (): Promise<void> => {
+    if (!isFirebaseConfigured) return;
     try {
       await firebaseSignOut(auth);
     } catch (error) {
@@ -64,6 +73,9 @@ export const FirebaseAuthProvider = ({ children }: { children: React.ReactNode }
   };
 
   const signInWithEmail = async (email: string, password: string): Promise<User | null> => {
+    if (!isFirebaseConfigured) {
+      throw new Error('Firebase is not configured. Set NEXT_PUBLIC_FIREBASE_* env vars to enable email sign-in.');
+    }
     try {
       const result = await signInWithEmailAndPassword(auth, email, password);
       return result.user;
@@ -74,6 +86,9 @@ export const FirebaseAuthProvider = ({ children }: { children: React.ReactNode }
   };
 
   const signUpWithEmail = async (email: string, password: string): Promise<User | null> => {
+    if (!isFirebaseConfigured) {
+      throw new Error('Firebase is not configured. Set NEXT_PUBLIC_FIREBASE_* env vars to enable email sign-up.');
+    }
     try {
       const result = await createUserWithEmailAndPassword(auth, email, password);
       return result.user;
