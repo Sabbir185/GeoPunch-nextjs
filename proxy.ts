@@ -1,6 +1,4 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { Ratelimit } from "@upstash/ratelimit";
-import { Redis } from "@upstash/redis";
 import { updateSession } from "./utils/middleware";
 
 // Block suspicious paths
@@ -18,15 +16,7 @@ const blockedPaths = [
   "/index/user/register.html",
 ];
 
-const redis = Redis.fromEnv();
-
-const ratelimit = new Ratelimit({
-  redis,
-  limiter: Ratelimit.fixedWindow(100, "1 m"),
-  analytics: true,
-});
-
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   const isBlocked = blockedPaths.some((badPath) => pathname.includes(badPath));
@@ -34,21 +24,6 @@ export async function middleware(request: NextRequest) {
     return new NextResponse("Blocked", { status: 403 });
   }
 
-  const ip =
-    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
-    "127.0.0.1";
-  const { success, limit, remaining, reset } = await ratelimit.limit(ip);
-
-  if (!success) {
-    return new NextResponse("Rate limit exceeded", {
-      status: 429,
-      headers: {
-        "X-RateLimit-Limit": limit.toString(),
-        "X-RateLimit-Remaining": remaining.toString(),
-        "X-RateLimit-Reset": reset.toString(),
-      },
-    });
-  }
   return await updateSession(request);
 }
 

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { useFirebaseAuth } from '@/contexts/FirebaseAuthContext';
 import { toast } from 'sonner';
@@ -36,6 +36,9 @@ const GoogleAuthModal: React.FC<GoogleAuthModalProps> = ({ isOpen, onClose, onSu
       <DialogContent className="sm:max-w-[400px]">
         <DialogHeader>
           <DialogTitle className="text-center">Sign In / Sign Up</DialogTitle>
+          <DialogDescription className="sr-only">
+            Sign in or sign up with your Google account
+          </DialogDescription>
         </DialogHeader>
         <div className="space-y-4 pt-4">
           <div className="text-center text-sm text-gray-600 mb-4">

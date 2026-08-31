@@ -9,6 +9,7 @@ import {
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -143,6 +144,9 @@ function AttendanceTable() {
         <DialogContent className="max-w-2xl">
           <DialogHeader>
             <DialogTitle>Attendance Details</DialogTitle>
+            <DialogDescription className="sr-only">
+              Detailed attendance record
+            </DialogDescription>
           </DialogHeader>
           {selectedRecord && (
             <div className="space-y-6">

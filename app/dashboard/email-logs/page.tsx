@@ -3,12 +3,13 @@ import React, { useState } from "react";
 import Table from "@/components/common/table";
 import { useFetch } from "@/hooks/userAction";
 import { fetchEmailLogList } from "@/utils/backend_helper";
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogHeader, 
-  DialogTitle, 
-  DialogTrigger 
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -235,6 +236,9 @@ export default function EmailLogsPage() {
                 <Mail className="h-5 w-5" />
                 Email Details
               </DialogTitle>
+              <DialogDescription className="sr-only">
+                Detailed information about the selected email log
+              </DialogDescription>
             </DialogHeader>
             {selectedEmail && (
               <div className="space-y-6 pt-4">

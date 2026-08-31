@@ -5,7 +5,14 @@
 import * as Sentry from "@sentry/nextjs";
 
 Sentry.init({
-  dsn: "https://e26f8224885e2f2deef84479c2dde88d@o4509350962987008.ingest.us.sentry.io/4509350973997056",
+  // Disabled in development: Turbopack + Sentry's OpenTelemetry instrumentation
+  // currently collide (duplicate @opentelemetry/api registration), spamming
+  // MaxListenersExceededWarning. Not needed locally anyway.
+  // https://github.com/getsentry/sentry-javascript/issues/19367
+  dsn:
+    process.env.NODE_ENV === "production"
+      ? "https://e26f8224885e2f2deef84479c2dde88d@o4509350962987008.ingest.us.sentry.io/4509350973997056"
+      : undefined,
 
   // Define how likely traces are sampled. Adjust this value in production, or use tracesSampler for greater control.
   tracesSampleRate: 1,

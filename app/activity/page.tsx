@@ -6,6 +6,7 @@ import { fetchUserActivityList } from "@/utils/backend_helper";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -310,6 +311,9 @@ export default function ActivityPage() {
                 <Mail className="h-5 w-5" />
                 Send Email to {selectedUserName}
               </DialogTitle>
+              <DialogDescription className="sr-only">
+                Compose and send an email to this user
+              </DialogDescription>
             </DialogHeader>
             <div className="space-y-4 pt-4">
               <div className="space-y-2">

@@ -6,7 +6,7 @@ import { SearchInput } from "../ui/searchInput";
 import { ReactNode, useState } from "react";
 import Swal from "sweetalert2";
 import Image from "next/image";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "../ui/dialog";
 import {useAction} from "@/hooks/userAction";
 import {useI18n} from "@/contexts/i18n";
 import {ScaleLoader} from "react-spinners";
@@ -268,6 +268,9 @@ export const TableImage = ({ url }: { url: string }) => {
                         <DialogTitle className='text-lg font-medium text-mainText'>
                             Full Image
                         </DialogTitle>
+                        <DialogDescription className="sr-only">
+                            Enlarged preview of the selected image
+                        </DialogDescription>
                     </DialogHeader>
                     <div className="flex justify-center items-center">
                         <Image
