@@ -36,6 +36,11 @@ export const FirebaseAuthProvider = ({ children }: { children: React.ReactNode }
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!auth) {
+      setLoading(false);
+      return;
+    }
+
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
       setLoading(false);
@@ -45,6 +50,10 @@ export const FirebaseAuthProvider = ({ children }: { children: React.ReactNode }
   }, []);
 
   const signInWithGoogle = async (): Promise<User | null> => {
+    if (!auth || !googleProvider) {
+      console.warn('Firebase Auth is not configured');
+      return null;
+    }
     try {
       const result = await signInWithPopup(auth, googleProvider);
       return result.user;
@@ -55,6 +64,7 @@ export const FirebaseAuthProvider = ({ children }: { children: React.ReactNode }
   };
 
   const signOut = async (): Promise<void> => {
+    if (!auth) return;
     try {
       await firebaseSignOut(auth);
     } catch (error) {
@@ -64,6 +74,7 @@ export const FirebaseAuthProvider = ({ children }: { children: React.ReactNode }
   };
 
   const signInWithEmail = async (email: string, password: string): Promise<User | null> => {
+    if (!auth) return null;
     try {
       const result = await signInWithEmailAndPassword(auth, email, password);
       return result.user;
@@ -74,6 +85,7 @@ export const FirebaseAuthProvider = ({ children }: { children: React.ReactNode }
   };
 
   const signUpWithEmail = async (email: string, password: string): Promise<User | null> => {
+    if (!auth) return null;
     try {
       const result = await createUserWithEmailAndPassword(auth, email, password);
       return result.user;

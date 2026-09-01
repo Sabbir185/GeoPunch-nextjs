@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sendEmail } from "@/lib/resend";
+
+export const dynamic = "force-dynamic";
 import { getCurrentUser } from "@/lib/current-user";
 import { logEvent } from "@/utils/sentry";
 import { prisma } from "@/lib/prisma";

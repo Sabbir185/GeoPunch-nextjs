@@ -18,38 +18,57 @@ const blockedPaths = [
   "/index/user/register.html",
 ];
 
-const redis = Redis.fromEnv();
+const hasRedisEnv =
+  Boolean(process.env.UPSTASH_REDIS_REST_URL) &&
+  Boolean(process.env.UPSTASH_REDIS_REST_TOKEN);
 
-const ratelimit = new Ratelimit({
-  redis,
-  limiter: Ratelimit.fixedWindow(100, "1 m"),
-  analytics: true,
-});
+const redis = hasRedisEnv ? Redis.fromEnv() : null;
+
+const ratelimit = redis
+  ? new Ratelimit({
+      redis,
+      limiter: Ratelimit.fixedWindow(100, "1 m"),
+      analytics: true,
+    })
+  : null;
 
 export async function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  try {
+    const { pathname } = request.nextUrl;
 
-  const isBlocked = blockedPaths.some((badPath) => pathname.includes(badPath));
-  if (isBlocked) {
-    return new NextResponse("Blocked", { status: 403 });
+    const isBlocked = blockedPaths.some((badPath) => pathname.includes(badPath));
+    if (isBlocked) {
+      return new NextResponse("Blocked", { status: 403 });
+    }
+
+    if (ratelimit) {
+      try {
+        const ip =
+          request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
+          "127.0.0.1";
+        const { success, limit, remaining, reset } = await ratelimit.limit(ip);
+
+        if (!success) {
+          return new NextResponse("Rate limit exceeded", {
+            status: 429,
+            headers: {
+              "X-RateLimit-Limit": limit.toString(),
+              "X-RateLimit-Remaining": remaining.toString(),
+              "X-RateLimit-Reset": reset.toString(),
+            },
+          });
+        }
+      } catch (rateLimitErr) {
+        console.error("Rate limiter error:", rateLimitErr);
+        // Fail open so Redis issues never crash the entire site
+      }
+    }
+
+    return await updateSession(request);
+  } catch (err) {
+    console.error("Middleware unhandled error:", err);
+    return NextResponse.next();
   }
-
-  const ip =
-    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??
-    "127.0.0.1";
-  const { success, limit, remaining, reset } = await ratelimit.limit(ip);
-
-  if (!success) {
-    return new NextResponse("Rate limit exceeded", {
-      status: 429,
-      headers: {
-        "X-RateLimit-Limit": limit.toString(),
-        "X-RateLimit-Remaining": remaining.toString(),
-        "X-RateLimit-Reset": reset.toString(),
-      },
-    });
-  }
-  return await updateSession(request);
 }
 
 export const config = {

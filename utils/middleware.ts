@@ -1,4 +1,3 @@
-import { profileAction } from "@/app/actions/profile";
 import { NextResponse, type NextRequest } from "next/server";
 
 const protectedRoutes = ["/dashboard", "/profile"];
@@ -8,8 +7,7 @@ export async function updateSession(request: NextRequest) {
     request,
   });
 
-  const { data: user } = await profileAction();
-
+  const token = request.cookies.get("auth-token")?.value;
   const path = request.nextUrl.pathname;
 
   if (path === "/") {
@@ -18,7 +16,7 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  if (user && path.startsWith("/login")) {
+  if (token && path.startsWith("/login")) {
     const url = request.nextUrl.clone();
     url.pathname = "/dashboard";
     return NextResponse.redirect(url);
@@ -28,7 +26,7 @@ export async function updateSession(request: NextRequest) {
     path.startsWith(route)
   );
 
-  if (!user && isProtectedRoute) {
+  if (!token && isProtectedRoute) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);
