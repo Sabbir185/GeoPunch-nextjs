@@ -9,7 +9,7 @@ const keyPath = path.join(
 
 const storage = new Storage({ keyFilename: keyPath });
 
-const bucketName = "geopunch";
+const bucketName = "gpi-connect";
 
 /**
  * Upload a local file to GCS bucket.

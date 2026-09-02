@@ -122,7 +122,7 @@ export default function SiteSettingsForm({ settings }: { settings: TSetting }) {
       <Card className="bg-gray-50 shadow-none">
         <CardHeader>
           <CardTitle>Settings</CardTitle>
-          <CardDescription>GeoPunch Site Settings</CardDescription>
+          <CardDescription>GPI Connect Site Settings</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)}>

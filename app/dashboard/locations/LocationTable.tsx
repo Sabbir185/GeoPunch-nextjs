@@ -73,7 +73,7 @@ function LocationTable() {
                 </CardHeader>
             </Card>
             <Table
-                title={"GeoPunch Location List"}
+                title={"GPI Connect Location List"}
                 columns={columns}
                 data={data}
                 loading={loading}

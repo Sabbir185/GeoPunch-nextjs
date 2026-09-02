@@ -132,7 +132,7 @@ export async function POST(request: NextRequest) {
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-            <h2 style="color: #333; margin: 0;">GeoPunch</h2>
+            <h2 style="color: #333; margin: 0;">GPI Connect</h2>
             <p style="color: #666; margin: 5px 0 0 0;">Message from ${senderName}</p>
           </div>
           <div style="background-color: #ffffff; padding: 20px; border-radius: 8px; border: 1px solid #e9ecef;">
@@ -143,7 +143,7 @@ export async function POST(request: NextRequest) {
           </div>
           <div style="margin-top: 20px; padding: 15px; background-color: #f8f9fa; border-radius: 8px; text-align: center;">
             <p style="color: #6c757d; margin: 0; font-size: 14px;">
-              This email was sent from the GeoPunch system
+              This email was sent from the GPI Connect system
             </p>
           </div>
         </div>

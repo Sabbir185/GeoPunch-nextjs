@@ -11,6 +11,18 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async rewrites() {
+    return [
+      {
+        source: "/activites",
+        destination: "/activity",
+      },
+      {
+        source: "/activities",
+        destination: "/activity",
+      },
+    ];
+  },
 };
 
 export default withSentryConfig(nextConfig, {

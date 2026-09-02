@@ -24,10 +24,10 @@ export async function POST(request: NextRequest) {
     const { data, error } = await sendEmail({
       from: process.env.FROM_EMAIL!,
       to: [email],
-      subject: "GPS Attendance - Your OTP Code",
+      subject: "GPI Connect - Your OTP Code",
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #333;">GPS Attendance System</h2>
+          <h2 style="color: #333;">GPI Connect</h2>
           <p>Your One-Time Password (OTP) for verification is:</p>
           <div style="background-color: #f4f4f4; padding: 20px; text-align: center; margin: 20px 0;">
             <h1 style="color: #2563eb; font-size: 32px; margin: 0; letter-spacing: 5px;">${otp}</h1>

@@ -14,6 +14,9 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { User } from "@/schemas/user.schema";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
+import GpiLogo from "@/components/common/GpiLogo";
 
 const loginSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
@@ -84,8 +87,26 @@ function Login() {
   };
 
   return (
-    <Card className="flex flex-1 min-h-screen border-none p-0 m-0 shadow-none bg-[#F9F9F5]">
-      <CardContent className="flex flex-1 flex-col md:flex-row p-0 m-0 border-2">
+    <div className="min-h-screen bg-white flex flex-col">
+      {/* Professional Header */}
+      <header className="sticky top-0 z-40 w-full border-b border-slate-200/50 bg-white/85 backdrop-blur-md">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <GpiLogo size="md" href="/" showBadge={true} />
+            <Link
+              href="/"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-slate-700 hover:bg-slate-100 text-sm font-semibold transition-all duration-200"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>Back to Home</span>
+            </Link>
+          </div>
+        </div>
+      </header>
+
+      {/* Login Card */}
+      <Card className="flex flex-1 border-none p-0 m-0 shadow-none bg-[#F9F9F5]">
+        <CardContent className="flex flex-1 flex-col md:flex-row p-0 m-0 border-2">
         <div className="relative hidden md:block md:flex-1">
           <Image
             src="/images/ku_adommo_bangla.jpg"
@@ -157,7 +178,8 @@ function Login() {
           </div>
         </div>
       </CardContent>
-    </Card>
+      </Card>
+    </div>
   );
 }
 

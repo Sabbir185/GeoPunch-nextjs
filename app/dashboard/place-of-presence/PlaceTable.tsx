@@ -57,7 +57,7 @@ function PlaceTable() {
                 </CardHeader>
             </Card>
             <Table
-                title={"GeoPunch Place List"}
+                title={"GPI Connect Place List"}
                 columns={columns}
                 data={data}
                 loading={loading}

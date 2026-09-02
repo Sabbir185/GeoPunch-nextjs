@@ -27,8 +27,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Attendance System",
-  description: "GPS Attendance System",
+  title: "GPI Connect — Verifiable Presence & Live Availability Platform",
+  description:
+    "Next-generation multi-tenant attendance, proximity presence, and live availability transparency platform for universities, enterprises, and field teams.",
 };
 
 export default function RootLayout({

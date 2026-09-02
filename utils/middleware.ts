@@ -10,11 +10,6 @@ export async function updateSession(request: NextRequest) {
   const token = request.cookies.get("auth-token")?.value;
   const path = request.nextUrl.pathname;
 
-  if (path === "/") {
-    const url = request.nextUrl.clone();
-    url.pathname = "/activity";
-    return NextResponse.redirect(url);
-  }
 
   if (token && path.startsWith("/login")) {
     const url = request.nextUrl.clone();

@@ -72,10 +72,10 @@ export async function POST(request: NextRequest) {
         await sendEmail({
             from: process.env.FROM_EMAIL!,
             to: [email.toLowerCase().trim()],
-            subject: "Welcome to GeoPunch",
+            subject: "Welcome to GPI Connect",
             html: `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-              <h2 style="color: #333;">Welcome to GeoPunch!</h2>
+              <h2 style="color: #333;">Welcome to GPI Connect!</h2>
               <p>Hi ${name},</p>
               <p>We are pleased to inform you that an account has been created for you by the administrator. You may now log in and begin using the platform's features.</p>
               <div style="background-color: #f4f4f4; padding: 20px; text-align: center; margin: 20px 0;">
@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
                 <h5 style="color: #2563eb; margin: 0;">Your Password: ${password}</h5>
               </div>
               <p style="color: #666;">If you have any questions, feel free to reply to this email.</p>
-              <p style="color: #666;">Best regards,<br/>The GeoPunch Team, ${process.env.FROM_EMAIL}</p>
+              <p style="color: #666;">Best regards,<br/>The GPI Connect Team, ${process.env.FROM_EMAIL}</p>
             </div>
           `,
         });
