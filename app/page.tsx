@@ -16,6 +16,7 @@ import FaqSection from "@/components/landing/FaqSection";
 import CtaSection from "@/components/landing/CtaSection";
 import Footer from "@/components/landing/Footer";
 import Reveal from "@/components/landing/Reveal";
+import PandaAssistantWidget from "@/components/landing/PandaAssistantWidget";
 
 export default function LandingPage() {
   return (
@@ -86,6 +87,9 @@ export default function LandingPage() {
 
       {/* Corporate Footer */}
       <Footer />
+
+      {/* Floating Panda Assistant */}
+      <PandaAssistantWidget />
     </div>
   );
 }
