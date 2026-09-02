@@ -17,11 +17,11 @@ export default function FaqSection() {
     },
     {
       q: "Does GPI Connect continuously track background location?",
-      a: "Strictly NO. Continuous background tracking is deliberately excluded on privacy and battery grounds (§6.2 Out of Scope). Location is read ONLY at the exact moment of an explicit check-in or status update. Exact GPS coordinates are never published publicly — only human-readable tags.",
+      a: "Strictly NO. Continuous background tracking is deliberately excluded on privacy and battery grounds. Location is read ONLY at the exact moment of an explicit check-in or status update. Exact GPS coordinates are never published publicly — only human-readable tags.",
     },
     {
       q: "How does GPI Connect stop students forwarding tokens to absent friends?",
-      a: "Unlike simple apps that broadcast a token, GPI Connect mandates Two-Way Confirmation (§M5.3, §9.1 A3). A forwarded token is useless because the admin's device must detect the student's physical hardware in the room. In addition, entrance QR codes dynamically rotate every few seconds to defeat static photographs.",
+      a: "Unlike simple apps that broadcast a token, GPI Connect mandates Two-Way Confirmation. A forwarded token is useless because the admin's device must detect the student's physical hardware in the room. In addition, entrance QR codes dynamically rotate every few seconds to defeat static photographs.",
     },
     {
       q: "Can I use GPI Connect for a small tuition batch or student club without an institution?",

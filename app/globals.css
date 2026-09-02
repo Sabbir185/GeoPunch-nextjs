@@ -159,6 +159,17 @@
   scrollbar-color: #c1c1c1 #f1f1f1;
 }
 
+/* Smooth in-page scrolling, offset for the sticky header */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+section[id] {
+  scroll-margin-top: 6.5rem;
+}
+
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
   50% { transform: translateY(-8px); }

@@ -89,7 +89,7 @@ export default function SecurityMatrix() {
         {/* Section Heading */}
         <div className="text-center max-w-3xl mx-auto">
           <span className="text-xs font-bold uppercase tracking-wider text-cyan-400 bg-cyan-950/80 px-3.5 py-1.5 rounded-full border border-cyan-800">
-            Attendance Integrity Scope (§9)
+            Anti-Proxy Attendance Integrity Engine
           </span>
           <h2 className="mt-4 text-3xl sm:text-4xl font-extrabold text-white tracking-tight font-sans">
             If Attendance Isn&apos;t Trustworthy, It Has Zero Value.

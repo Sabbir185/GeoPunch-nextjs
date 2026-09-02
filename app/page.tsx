@@ -15,6 +15,7 @@ import PricingSection from "@/components/landing/PricingSection";
 import FaqSection from "@/components/landing/FaqSection";
 import CtaSection from "@/components/landing/CtaSection";
 import Footer from "@/components/landing/Footer";
+import Reveal from "@/components/landing/Reveal";
 
 export default function LandingPage() {
   return (
@@ -28,37 +29,59 @@ export default function LandingPage() {
         <Hero />
 
         {/* 1.5. Professional Trust & Metrics Section */}
-        <TrustMetrics />
+        <Reveal>
+          <TrustMetrics />
+        </Reveal>
 
         {/* 2. All Institutes: Educational, Corporate, Govt, Private Company */}
-        <InstitutesSection />
+        <Reveal>
+          <InstitutesSection />
+        </Reveal>
 
         {/* 3. The Three Core Pillars */}
-        <PillarsSection />
+        <Reveal>
+          <PillarsSection />
+        </Reveal>
 
         {/* 4. Dual-Track Attendance: Track 1 Org Members & Track 2 Classroom BLE */}
-        <DualTrackSection />
+        <Reveal>
+          <DualTrackSection />
+        </Reveal>
 
         {/* 5. AI Assistance: GPI Copilot & Natural Language Presence Queries */}
-        <AiAssistantSection />
+        <Reveal>
+          <AiAssistantSection />
+        </Reveal>
 
         {/* 6. Anti-Proxy Attendance Integrity Engine */}
-        <SecurityMatrix />
+        <Reveal>
+          <SecurityMatrix />
+        </Reveal>
 
         {/* 7. How It Works (4-Step Rollout) */}
-        <HowItWorks />
+        <Reveal>
+          <HowItWorks />
+        </Reveal>
 
         {/* 8. About Us Section */}
-        <AboutSection />
+        <Reveal>
+          <AboutSection />
+        </Reveal>
 
         {/* 9. Transparent Pricing Plans */}
-        <PricingSection />
+        <Reveal>
+          <PricingSection />
+        </Reveal>
 
         {/* 10. Frequently Asked Questions */}
-        <FaqSection />
+        <Reveal>
+          <FaqSection />
+        </Reveal>
 
         {/* 11. Final High-Conversion CTA Banner */}
-        <CtaSection />
+        <Reveal>
+          <CtaSection />
+        </Reveal>
       </main>
 
       {/* Corporate Footer */}

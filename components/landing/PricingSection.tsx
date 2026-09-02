@@ -32,7 +32,7 @@ export default function PricingSection() {
       name: "Campus Pro",
       badge: "Most Popular for Universities",
       priceMonthly: "$1.80",
-      priceAnnual: "$1.40",
+      priceAnnual: "$1.35",
       period: "per user / month",
       desc: "Complete presence & live availability infrastructure for colleges and universities.",
       features: [
@@ -54,7 +54,7 @@ export default function PricingSection() {
       name: "Enterprise & Field",
       badge: "For Field Sales & Depots",
       priceMonthly: "$3.50",
-      priceAnnual: "$2.80",
+      priceAnnual: "$2.63",
       period: "per user / month",
       desc: "High-integrity territorial tracking and support desk for corporate & sales operations.",
       features: [

@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { Activity, ShieldCheck, Heart, Github, Linkedin, Twitter, Mail, Lock, Globe } from "lucide-react";
+import { Activity, ShieldCheck, Mail, Lock, Globe } from "lucide-react";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -36,7 +36,6 @@ export default function Footer() {
                 <span className="block text-xl font-black tracking-tight text-white font-sans">
                   GPI <span className="text-blue-500">Connect</span>
                 </span>
-                <span className="block text-xs text-slate-500 font-medium">v3.0 Baseline</span>
               </div>
             </Link>
 
@@ -44,24 +43,11 @@ export default function Footer() {
               Enterprise attendance infrastructure. Verifiable presence, live availability, and structured collaboration—without hardware costs.
             </p>
 
-            <div className="pt-2 flex items-center gap-2.5 text-xs text-slate-400">
-              <span className="w-2 h-2 rounded-full bg-emerald-400/80 animate-pulse"></span>
-              <span>Status: <strong className="text-emerald-400 font-semibold">Operational</strong></span>
-            </div>
-
-            {/* Social Links */}
+            {/* Contact */}
             <div className="pt-2 flex items-center gap-3">
-              <a href="#github" className="p-2.5 rounded-lg bg-slate-800/60 text-slate-400 hover:bg-blue-600/30 hover:text-blue-300 transition-all duration-200 hover:scale-110">
-                <Github className="w-4 h-4" />
-              </a>
-              <a href="#linkedin" className="p-2.5 rounded-lg bg-slate-800/60 text-slate-400 hover:bg-blue-600/30 hover:text-blue-300 transition-all duration-200 hover:scale-110">
-                <Linkedin className="w-4 h-4" />
-              </a>
-              <a href="#twitter" className="p-2.5 rounded-lg bg-slate-800/60 text-slate-400 hover:bg-sky-600/30 hover:text-sky-300 transition-all duration-200 hover:scale-110">
-                <Twitter className="w-4 h-4" />
-              </a>
-              <a href="mailto:support@gpiconnect.com" className="p-2.5 rounded-lg bg-slate-800/60 text-slate-400 hover:bg-emerald-600/30 hover:text-emerald-300 transition-all duration-200 hover:scale-110">
+              <a href="mailto:support@gpiconnect.com" className="inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-800/60 text-slate-300 hover:bg-emerald-600/30 hover:text-emerald-300 transition-all duration-200 text-xs font-semibold">
                 <Mail className="w-4 h-4" />
+                <span>support@gpiconnect.com</span>
               </a>
             </div>
           </div>
@@ -193,37 +179,23 @@ export default function Footer() {
         {/* Footer Bottom - Legal & Links */}
         <div className="mt-10 pt-8 border-t border-slate-800/50 flex flex-col sm:flex-row items-center justify-between gap-6 text-xs text-slate-500">
           <div className="text-center sm:text-left">
-            &copy; {currentYear} <strong className="text-white">GPI Connect</strong>. All rights reserved. 
-            <span className="text-slate-600"> Baseline v3.0 Specification.</span>
+            &copy; {currentYear} <strong className="text-white">GPI Connect</strong>. All rights reserved.
           </div>
           <div className="flex flex-wrap items-center justify-center gap-4">
-            <Link href="/" className="hover:text-slate-300 transition-colors">
+            <Link href="/terms" className="hover:text-slate-300 transition-colors">
               Terms
             </Link>
             <span className="text-slate-700">·</span>
-            <Link href="/" className="hover:text-slate-300 transition-colors">
+            <Link href="/privacy" className="hover:text-slate-300 transition-colors">
               Privacy
             </Link>
             <span className="text-slate-700">·</span>
-            <Link href="/" className="hover:text-slate-300 transition-colors">
-              Status
-            </Link>
-            <span className="text-slate-700">·</span>
-            <Link href="/" className="hover:text-slate-300 transition-colors">
+            <a href="mailto:support@gpiconnect.com" className="hover:text-slate-300 transition-colors">
               Contact
-            </Link>
+            </a>
           </div>
         </div>
 
-        {/* Bottom Branding */}
-        <div className="mt-8 pt-6 border-t border-slate-800/30 text-center text-xs text-slate-600">
-          <p>
-            Built for organizations that demand verifiable presence without compromise. 
-            <span className="text-slate-500 ml-1">
-              🇧🇩 Made in Bangladesh
-            </span>
-          </p>
-        </div>
       </div>
     </footer>
   );

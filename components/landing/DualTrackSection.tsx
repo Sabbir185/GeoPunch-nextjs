@@ -232,7 +232,7 @@ export default function DualTrackSection() {
                   <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200/80 space-y-2">
                     <div className="flex items-center gap-2 text-xs font-bold text-amber-900">
                       <AlertCircle className="w-4 h-4 text-amber-700" />
-                      Two-Way Confirmation Mandatory (§M5.3 Scope Requirement)
+                      Two-Way Confirmation Mandatory
                     </div>
                     <p className="text-xs text-amber-800 leading-normal">
                       One-way broadcasts are vulnerable: students inside can forward broadcast tokens to absent friends outside. GPI Connect enforces <strong>mutual two-way device detection</strong>, guaranteeing only physical attendees are marked present.

@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   Activity,
-  ChevronRight,
   Menu,
   X,
   Sparkles,
@@ -13,31 +12,29 @@ import {
   UserCheck,
 } from "lucide-react";
 import GpiLogo from "@/components/common/GpiLogo";
-import QuickAuthModal from "./QuickAuthModal";
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [authModalOpen, setAuthModalOpen] = useState(false);
-  const [authDefaultMode, setAuthDefaultMode] = useState<"signin" | "signup">("signin");
 
   useEffect(() => {
+    let ticking = false;
     const handleScroll = () => {
-      if (window.scrollY > 15) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        setIsScrolled(window.scrollY > 15);
+        const doc = document.documentElement;
+        const scrollable = doc.scrollHeight - doc.clientHeight;
+        setScrollProgress(scrollable > 0 ? (window.scrollY / scrollable) * 100 : 0);
+        ticking = false;
+      });
     };
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-  const openAuth = (mode: "signin" | "signup") => {
-    setAuthDefaultMode(mode);
-    setAuthModalOpen(true);
-    setMobileMenuOpen(false);
-  };
 
   return (
     <>
@@ -127,13 +124,13 @@ export default function Navbar() {
                 <LogIn className="w-4 h-4" />
                 <span>Login</span>
               </Link>
-              <button
-                onClick={() => openAuth("signin")}
+              <Link
+                href="/login"
                 className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold shadow-lg shadow-blue-600/30 hover:shadow-xl hover:shadow-blue-600/40 transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 group"
               >
                 <UserCheck className="w-4.5 h-4.5 group-hover:scale-110 transition-transform" />
                 <span>Get Started</span>
-              </button>
+              </Link>
             </div>
 
             {/* Mobile Menu Toggle */}
@@ -154,6 +151,14 @@ export default function Navbar() {
               </button>
             </div>
           </div>
+        </div>
+
+        {/* Scroll Progress Indicator */}
+        <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-transparent">
+          <div
+            className="h-full bg-gradient-to-r from-blue-600 via-indigo-600 to-teal-500 transition-[width] duration-150 ease-out"
+            style={{ width: `${scrollProgress}%` }}
+          />
         </div>
 
         {/* Mobile Navigation Drawer - Enhanced */}
@@ -215,24 +220,18 @@ export default function Navbar() {
                 <LogIn className="w-4 h-4" />
                 <span>Login</span>
               </Link>
-              <button
-                onClick={() => openAuth("signin")}
+              <Link
+                href="/login"
+                onClick={() => setMobileMenuOpen(false)}
                 className="w-full py-3 rounded-xl text-sm font-bold bg-blue-600 text-white hover:bg-blue-700 shadow-md shadow-blue-600/25 hover:shadow-lg transition-all flex items-center justify-center gap-2"
               >
                 <UserCheck className="w-4 h-4" />
                 <span>Get Started Free</span>
-              </button>
+              </Link>
             </div>
           </div>
         )}
       </header>
-
-      {/* Quick Auth Modal (Email or Phone only) */}
-      <QuickAuthModal
-        isOpen={authModalOpen}
-        onClose={() => setAuthModalOpen(false)}
-        defaultMode={authDefaultMode}
-      />
     </>
   );
 }

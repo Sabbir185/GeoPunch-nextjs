@@ -1,12 +1,12 @@
 "use client";
 
 import React from "react";
-import { 
-  Users, 
-  Building2, 
-  Globe, 
-  Shield, 
-  Award, 
+import {
+  Clock,
+  WifiOff,
+  Wallet,
+  ShieldCheck,
+  Award,
   TrendingUp,
   CheckCircle2,
   Zap,
@@ -15,34 +15,34 @@ import {
 export default function TrustMetrics() {
   const metrics = [
     {
-      icon: Users,
-      value: "50K+",
-      label: "Active Users",
-      description: "Daily active platform users",
+      icon: Clock,
+      value: "<90s",
+      label: "60-Member Session",
+      description: "Proximity-based capture, start to finish",
       color: "from-blue-600 to-indigo-600",
       light: "from-blue-50 to-indigo-50",
     },
     {
-      icon: Building2,
-      value: "500+",
-      label: "Organizations",
-      description: "Universities, corporates & institutions",
+      icon: WifiOff,
+      value: "100%",
+      label: "Offline-First",
+      description: "7-day zero data-loss queuing",
       color: "from-teal-600 to-emerald-600",
       light: "from-teal-50 to-emerald-50",
     },
     {
-      icon: Globe,
-      value: "15",
-      label: "Countries",
-      description: "Multi-regional deployment ready",
+      icon: Wallet,
+      value: "$0",
+      label: "Hardware Cost",
+      description: "Smartphone-only, no cards or terminals",
       color: "from-purple-600 to-indigo-600",
       light: "from-purple-50 to-indigo-50",
     },
     {
-      icon: Shield,
-      value: "99.5%",
-      label: "Uptime SLA",
-      description: "Enterprise reliability guarantee",
+      icon: ShieldCheck,
+      value: "99.9%",
+      label: "Anti-Proxy Accuracy",
+      description: "Geofence + liveness verified presence",
       color: "from-emerald-600 to-teal-600",
       light: "from-emerald-50 to-teal-50",
     },
@@ -68,13 +68,13 @@ export default function TrustMetrics() {
         <div className="text-center max-w-3xl mx-auto mb-16">
           <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200/60 text-blue-800 text-xs font-bold uppercase tracking-wider">
             <Award className="w-4 h-4" />
-            Trusted by Institutions Worldwide
+            Engineered for Enterprise
           </span>
           <h2 className="mt-5 text-4xl sm:text-5xl font-black text-slate-900 tracking-tight font-sans">
             Platform at a Glance
           </h2>
           <p className="mt-4 text-lg text-slate-600 leading-relaxed">
-            Enterprise-grade infrastructure trusted by leading universities, corporations, and government institutions worldwide.
+            Built to hold up under real classroom and field conditions &mdash; not just in a demo.
           </p>
         </div>
 
@@ -135,43 +135,14 @@ export default function TrustMetrics() {
           </div>
         </div>
 
-        {/* Testimonial/Trust Section */}
-        <div className="mt-16 pt-12 border-t border-slate-200/60">
-          <div className="text-center mb-12">
-            <h3 className="text-2xl font-bold text-slate-900 mb-4">
-              Used by Leading Organizations
-            </h3>
-            <p className="text-slate-600 max-w-2xl mx-auto">
-              Trusted by universities, corporations, and government institutions for verifiable, transparent attendance management.
-            </p>
-          </div>
-
-          {/* Placeholder for Institution Logos */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
-            {[1, 2, 3, 4, 5, 6].map((item) => (
-              <div
-                key={item}
-                className="flex items-center justify-center p-4 rounded-xl bg-gradient-to-br from-slate-50 to-slate-100 border border-slate-200/80 hover:border-blue-300/60 hover:shadow-md transition-all duration-200 group"
-              >
-                <div className="text-center">
-                  <Building2 className="w-8 h-8 text-slate-400 mx-auto mb-2 group-hover:text-blue-600 transition-colors" />
-                  <span className="text-xs font-semibold text-slate-600 group-hover:text-slate-900 transition-colors">
-                    Institution {item}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
         {/* CTA Section */}
-        <div className="mt-16 pt-12 border-t border-slate-200/60 text-center">
+        <div className="mt-4 pt-12 border-t border-slate-200/60 text-center">
           <div className="max-w-2xl mx-auto">
             <h3 className="text-2xl font-bold text-slate-900 mb-4">
-              Ready to Transform Your Organization?
+              Ready to Try It With Your Own Team?
             </h3>
             <p className="text-slate-600 mb-8">
-              Join hundreds of institutions using GPI Connect for verifiable presence and live availability management.
+              Explore the live activity board or set up your organization in minutes &mdash; no hardware to order, nothing to install on campus.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a

@@ -76,7 +76,7 @@ const QUERIES: QueryExample[] = [
         { label: "Confidence Score", val: "94%" },
         { label: "Auto Draft", val: "Ready" },
       ],
-      badge: "Predictive AI (§12)",
+      badge: "Predictive AI",
       badgeColor: "bg-purple-100 text-purple-800 border-purple-300",
     },
   },
