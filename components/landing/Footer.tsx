@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { Activity, ShieldCheck, Mail, Lock, Globe } from "lucide-react";
+import { Activity, ShieldCheck, Mail, Lock, Globe, Smartphone, Download } from "lucide-react";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -82,6 +82,17 @@ export default function Footer() {
               <li>
                 <Link href="#pricing" className="text-slate-400 hover:text-white transition-colors">
                   Pricing Plans
+                </Link>
+              </li>
+              <li className="pt-2 border-t border-slate-800/80">
+                <Link href="#mobile-app" className="text-teal-400 hover:text-teal-300 font-semibold flex items-center gap-1.5 transition-colors">
+                  <Smartphone className="w-3.5 h-3.5" />
+                  Mobile App (APK)
+                </Link>
+              </li>
+              <li>
+                <Link href="#download-card" className="text-slate-400 hover:text-white text-xs transition-colors">
+                  Demo Credentials
                 </Link>
               </li>
             </ul>

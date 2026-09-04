@@ -10,6 +10,7 @@ import {
   ArrowUpRight,
   LogIn,
   UserCheck,
+  Smartphone,
 } from "lucide-react";
 import GpiLogo from "@/components/common/GpiLogo";
 
@@ -98,6 +99,14 @@ export default function Navbar() {
                 className="text-slate-700 hover:text-blue-600 px-3.5 py-2 rounded-lg text-sm font-semibold transition-all hover:bg-blue-50/50"
               >
                 How it works
+              </Link>
+
+              <Link
+                href="#mobile-app"
+                className="text-slate-700 hover:text-blue-600 px-3.5 py-2 rounded-lg text-sm font-semibold transition-all hover:bg-blue-50/50 flex items-center gap-1.5"
+              >
+                <Smartphone className="w-4 h-4 text-teal-600" />
+                <span>Mobile App</span>
               </Link>
 
               <Link
@@ -193,6 +202,20 @@ export default function Navbar() {
               className="block px-3 py-2.5 rounded-lg text-base font-semibold text-slate-800 hover:bg-slate-100 transition-colors"
             >
               How it works
+            </Link>
+
+            <Link
+              href="#mobile-app"
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-teal-50 to-emerald-50 border border-teal-200 text-teal-900 font-bold shadow-xs hover:shadow-sm transition-all"
+            >
+              <div className="flex items-center gap-2.5">
+                <Smartphone className="w-5 h-5 text-teal-600" />
+                <span>Mobile App (APK)</span>
+              </div>
+              <span className="text-[10px] font-bold uppercase bg-teal-200 text-teal-900 px-2 py-0.5 rounded-full">
+                Screenshots & APK
+              </span>
             </Link>
 
             <Link

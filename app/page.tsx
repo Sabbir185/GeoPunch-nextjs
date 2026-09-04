@@ -3,7 +3,7 @@
 import React from "react";
 import Navbar from "@/components/landing/Navbar";
 import Hero from "@/components/landing/Hero";
-import TrustMetrics from "@/components/landing/TrustMetrics";
+import MobileAppShowcase from "@/components/landing/MobileAppShowcase";
 import InstitutesSection from "@/components/landing/InstitutesSection";
 import PillarsSection from "@/components/landing/PillarsSection";
 import DualTrackSection from "@/components/landing/DualTrackSection";
@@ -29,11 +29,6 @@ export default function LandingPage() {
         {/* 1. Hero Section with Quick Sign In/Sign Up & Interactive Showcase */}
         <Hero />
 
-        {/* 1.5. Professional Trust & Metrics Section */}
-        <Reveal>
-          <TrustMetrics />
-        </Reveal>
-
         {/* 2. All Institutes: Educational, Corporate, Govt, Private Company */}
         <Reveal>
           <InstitutesSection />
@@ -47,6 +42,11 @@ export default function LandingPage() {
         {/* 4. Dual-Track Attendance: Track 1 Org Members & Track 2 Classroom BLE */}
         <Reveal>
           <DualTrackSection />
+        </Reveal>
+
+        {/* 4.5. Official Mobile Companion App Showcase & Direct APK Download */}
+        <Reveal>
+          <MobileAppShowcase />
         </Reveal>
 
         {/* 5. AI Assistance: GPI Copilot & Natural Language Presence Queries */}

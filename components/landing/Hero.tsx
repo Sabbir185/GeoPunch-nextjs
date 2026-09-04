@@ -121,6 +121,20 @@ export default function Hero() {
             </Link>
           </div>
 
+          {/* Android Companion App Quick Link */}
+          <div className="mt-5 flex items-center justify-center gap-2 text-xs font-semibold text-slate-600 animate-in fade-in duration-700 delay-800 fill-mode-both flex-wrap">
+            <span className="flex h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="text-slate-500">Official Mobile App Available:</span>
+            <Link
+              href="#mobile-app"
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-teal-50 to-emerald-50 border border-teal-200/80 text-teal-800 hover:text-teal-900 hover:border-teal-300 font-bold transition-all shadow-xs"
+            >
+              <Smartphone className="w-3.5 h-3.5 text-teal-600" />
+              <span>Screenshots & Android APK (v1.0)</span>
+              <ArrowRight className="w-3 h-3 text-teal-600" />
+            </Link>
+          </div>
+
           {/* Real Workplace Visual */}
           <div className="mt-14 relative rounded-3xl overflow-hidden shadow-2xl shadow-slate-300/40 border border-slate-200/60 animate-in fade-in zoom-in-95 duration-1000 delay-500 fill-mode-both">
             <div className="relative h-64 sm:h-80 lg:h-[26rem] w-full">
