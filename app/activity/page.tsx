@@ -182,13 +182,21 @@ export default function ActivityPage() {
 
   console.log(data);
 
-  const activeUsers = data?.docs?.filter(
-    (user: any) => user?.status === "ACTIVE"
-  ).length;
-  const inactiveUsers = data?.docs?.filter(
-    (user: any) => user?.status === "INACTIVE" || user?.status === "SUSPENDED"
-  ).length;
-  const totalUsers = data?.docs?.length;
+  const totalUsers =
+    data?.stats?.totalFaculty ??
+    data?.pagination?.total ??
+    data?.docs?.length ??
+    0;
+  const activeUsers =
+    data?.stats?.activeUsers ??
+    data?.docs?.filter((user: any) => user?.status === "ACTIVE").length ??
+    0;
+  const inactiveUsers =
+    data?.stats?.inactiveUsers ??
+    data?.docs?.filter(
+      (user: any) => user?.status === "INACTIVE" || user?.status === "SUSPENDED"
+    ).length ??
+    0;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">

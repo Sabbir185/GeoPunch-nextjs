@@ -12,6 +12,7 @@ export async function GET(req: NextRequest) {
 
         let data;
         let total = 0;
+        let stats: any = null;
 
         if (id) {
             data = await prisma.user.findFirst({
@@ -51,7 +52,16 @@ export async function GET(req: NextRequest) {
                 ...searchConditions
             };
 
-            [data, total] = await Promise.all([
+            const baseWhere: any = {
+                role: {not: "ADMIN"},
+                isDeleted: false
+            };
+
+            let activeCount = 0;
+            let inactiveCount = 0;
+            let checkedInCount = 0;
+
+            [data, total, activeCount, inactiveCount, checkedInCount] = await Promise.all([
                 prisma.user.findMany({
                     where: whereClause as object,
                     select: {
@@ -72,8 +82,18 @@ export async function GET(req: NextRequest) {
                     skip,
                     take: limit,
                 }),
-                prisma.user.count({where: whereClause as object})
+                prisma.user.count({where: whereClause as object}),
+                prisma.user.count({where: {...baseWhere, status: "ACTIVE"} as any}),
+                prisma.user.count({where: {...baseWhere, status: {in: ["INACTIVE", "SUSPENDED"]}} as any}),
+                prisma.user.count({where: {...baseWhere, activityStatus: "Checked-In"} as any})
             ]);
+
+            stats = {
+                totalFaculty: total,
+                activeUsers: activeCount,
+                inactiveUsers: inactiveCount,
+                checkedInUsers: checkedInCount
+            };
         }
 
         if (!data) {
@@ -87,7 +107,7 @@ export async function GET(req: NextRequest) {
             status: 200,
             error: false,
             msg: "User data retrieved successfully",
-            data: id ? data : {docs: data},
+            data: id ? data : {docs: data, stats},
         };
 
         // Add pagination metadata for list requests

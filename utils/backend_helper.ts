@@ -28,7 +28,20 @@ export const updatePlace = (data: Record<string, unknown>) => patch('/place-of-p
 export const delPlace = (data: Record<string, unknown>) => del('/place-of-presence', data)
 export const createPlace = (data: Record<string, unknown>) => post('/place-of-presence', data)
 
-export const fetchUserActivityList = (data: Record<string, unknown>) => get('/user/activity', data)
+export const fetchUserActivityList = async (data: Record<string, any> = {}) => {
+    if (typeof window !== "undefined") {
+        const params = new URLSearchParams();
+        Object.entries(data || {}).forEach(([key, val]) => {
+            if (val !== undefined && val !== null && val !== '') {
+                params.append(key, String(val));
+            }
+        });
+        const qs = params.toString();
+        const res = await fetch(`/api/user/activity${qs ? `?${qs}` : ''}`);
+        return await res.json();
+    }
+    return get('/user/activity', data);
+};
 export const fetchActivityListAdmin = (data: Record<string, unknown>) => get('/attendance-logs', data)
 
 // Email logs

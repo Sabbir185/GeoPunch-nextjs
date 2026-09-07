@@ -37,6 +37,10 @@ model User {
   activityStatus String? // e.g., "Checked-In", "Checked-Out"
   activityPlace  String?
   isAuto         Boolean       @default(false)
+
+  @@index([isDeleted, role, lastActivity(sort: Desc)])
+  @@index([lastActivity(sort: Desc)])
+  @@index([department])
 }
 
 model Otp {
@@ -93,6 +97,9 @@ model ActivityLog {
   action          String // e.g., "Checked-In", "Checked-Out"
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
+
+  @@index([userId, checkedInTime(sort: Desc)])
+  @@index([checkedInTime(sort: Desc)])
 }
 
 model EmailLog {

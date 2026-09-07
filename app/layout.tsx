@@ -4,6 +4,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { FirebaseAuthProvider } from "@/contexts/FirebaseAuthContext";
+import DatabaseWarmup from "@/components/common/DatabaseWarmup";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -43,6 +44,7 @@ export default function RootLayout({
         className={`${syne.variable} ${inter.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}
         cz-shortcut-listen="true"
       >
+        <DatabaseWarmup />
         <Toaster />
         <FirebaseAuthProvider>
           <AuthProvider>{children}</AuthProvider>
