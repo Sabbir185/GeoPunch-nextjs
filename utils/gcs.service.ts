@@ -1,15 +1,43 @@
 import { Storage } from "@google-cloud/storage";
 import path from "path";
+import fs from "fs";
 import { Readable } from "stream";
 
-const keyPath = path.join(
-  process.cwd(),
-  "utils/gps-attendence-system-a290280df6ad.json"
-);
+let storageInstance: Storage | null = null;
 
-const storage = new Storage({ keyFilename: keyPath });
+function getStorageClient(): Storage {
+  if (storageInstance) {
+    return storageInstance;
+  }
 
-const bucketName = "gpi-connect";
+  if (process.env.GCP_SERVICE_ACCOUNT_BASE64) {
+    try {
+      const decoded = Buffer.from(
+        process.env.GCP_SERVICE_ACCOUNT_BASE64,
+        "base64"
+      ).toString("utf-8");
+      const credentials = JSON.parse(decoded);
+      storageInstance = new Storage({ credentials });
+      return storageInstance;
+    } catch (err) {
+      console.error("Failed to parse GCP_SERVICE_ACCOUNT_BASE64:", err);
+    }
+  }
+
+  const keyPath = path.join(
+    process.cwd(),
+    "utils/gps-attendence-system-a290280df6ad.json"
+  );
+  if (fs.existsSync(keyPath)) {
+    storageInstance = new Storage({ keyFilename: keyPath });
+    return storageInstance;
+  }
+
+  storageInstance = new Storage();
+  return storageInstance;
+}
+
+const getBucketName = () => process.env.GCS_BUCKET_NAME || "geopunch";
 
 /**
  * Upload a local file to GCS bucket.
@@ -21,7 +49,8 @@ export const uploadFile = async (
   localFilePath: string,
   destFileName: string
 ): Promise<string> => {
-  await storage.bucket(bucketName).upload(localFilePath, {
+  const bucket = getBucketName();
+  await getStorageClient().bucket(bucket).upload(localFilePath, {
     destination: destFileName,
     resumable: false,
     metadata: {
@@ -29,7 +58,7 @@ export const uploadFile = async (
     },
   });
 
-  return `https://storage.googleapis.com/${bucketName}/${destFileName}`;
+  return `https://storage.googleapis.com/${bucket}/${destFileName}`;
 };
 
 /**
@@ -43,7 +72,7 @@ export const downloadFile = async (
   destLocalPath: string
 ): Promise<string> => {
   const options = { destination: destLocalPath };
-  await storage.bucket(bucketName).file(srcFileName).download(options);
+  await getStorageClient().bucket(getBucketName()).file(srcFileName).download(options);
   return destLocalPath;
 };
 
@@ -53,7 +82,7 @@ export const downloadFile = async (
  * @returns Confirmation message
  */
 export const deleteFile = async (fileName: string): Promise<string> => {
-  await storage.bucket(bucketName).file(fileName).delete();
+  await getStorageClient().bucket(getBucketName()).file(fileName).delete();
   return `${fileName} deleted.`;
 };
 
@@ -83,7 +112,8 @@ export const uploadFileFromBuffer = async (
   destFileName: string,
   contentType: string
 ): Promise<string> => {
-  const file = storage.bucket(bucketName).file(destFileName);
+  const bucket = getBucketName();
+  const file = getStorageClient().bucket(bucket).file(destFileName);
 
   const stream = file.createWriteStream({
     metadata: {
@@ -100,7 +130,7 @@ export const uploadFileFromBuffer = async (
       .pipe(stream)
       .on("error", reject)
       .on("finish", () => {
-        resolve(`https://storage.googleapis.com/${bucketName}/${destFileName}`);
+        resolve(`https://storage.googleapis.com/${bucket}/${destFileName}`);
       });
   });
 };

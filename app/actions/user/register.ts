@@ -29,6 +29,11 @@ export async function userRegistration(formData: FormData) {
             const response = await res.json();
             if (response?.url) {
                 data.image = response.url;
+            } else {
+                return {
+                    error: true,
+                    msg: response?.error || "Failed to upload image. Please try again.",
+                };
             }
         }
         if (data?.id) {

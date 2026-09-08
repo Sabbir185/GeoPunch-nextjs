@@ -56,6 +56,9 @@ const UserForm = ({data, update}: { data?: TRegisterUserSchema, update?: boolean
             form={form}
             onFinish={async (values) => {
                 values.id = data?.id;
+                if (data?.image && !userImage?.name) {
+                    values.image = data.image;
+                }
                 setIsSubmitLoader(true)
                 const toastId = toast.loading("Please wait...");
                 try {
