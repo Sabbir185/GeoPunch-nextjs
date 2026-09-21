@@ -20,12 +20,17 @@ async function initializeFirebaseAdmin() {
       if (!admin.apps.length) {
         let serviceAccount: ServiceAccount | null = null;
 
-        // 1. Try FIREBASE_SERVICE_ACCOUNT_KEY environment variable
-        if (process.env.FIREBASE_SERVICE_ACCOUNT_KEY) {
+        // 1. Try FIREBASE_SERVICE_ACCOUNT_KEY_BASE64 or FIREBASE_SERVICE_ACCOUNT_KEY environment variable
+        const envKey = process.env.FIREBASE_SERVICE_ACCOUNT_KEY_BASE64 || process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
+        if (envKey) {
           try {
-            serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY);
+            let jsonString = envKey.trim();
+            if (!jsonString.startsWith('{')) {
+              jsonString = Buffer.from(jsonString, 'base64').toString('utf8');
+            }
+            serviceAccount = JSON.parse(jsonString);
           } catch (envError) {
-            console.error('Error parsing FIREBASE_SERVICE_ACCOUNT_KEY env var:', envError);
+            console.error('Error parsing Firebase service account from env:', envError);
           }
         }
 
@@ -50,7 +55,7 @@ async function initializeFirebaseAdmin() {
         }
 
         if (!serviceAccount) {
-          console.error('No Firebase service account credentials found (checked FIREBASE_SERVICE_ACCOUNT_KEY and lib/firebaseGPIConnectAdmin.json)');
+          console.error('No Firebase service account credentials found (checked FIREBASE_SERVICE_ACCOUNT_KEY_BASE64 and lib/firebaseGPIConnectAdmin.json)');
           return null;
         }
 

@@ -33,8 +33,9 @@ NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project_id.appspot.com
 NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
 NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
 
-# Firebase Admin Configuration (for server-side)
-FIREBASE_SERVICE_ACCOUNT_KEY={"type":"service_account","project_id":"your_project_id",...}
+# Firebase Admin Configuration (for server-side token verification)
+# Can be provided as base64 string or raw JSON:
+FIREBASE_SERVICE_ACCOUNT_KEY_BASE64="your_base64_encoded_service_account_json"
 ```
 
 ## Firebase Setup Instructions
