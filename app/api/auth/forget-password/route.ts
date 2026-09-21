@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { sendEmail } from "@/lib/brevo";
 import { generateOTP } from "@/utils/common";
 import { NextRequest, NextResponse } from "next/server";
+import { getOtpEmailTemplate } from "@/lib/email-templates";
 
 export async function POST(request: NextRequest) {
   try {
@@ -24,18 +25,11 @@ export async function POST(request: NextRequest) {
     const { data, error } = await sendEmail({
       from: process.env.FROM_EMAIL!,
       to: [email],
-      subject: "GPI Connect - Your OTP Code",
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #333;">GPI Connect</h2>
-          <p>Your One-Time Password (OTP) for verification is:</p>
-          <div style="background-color: #f4f4f4; padding: 20px; text-align: center; margin: 20px 0;">
-            <h1 style="color: #2563eb; font-size: 32px; margin: 0; letter-spacing: 5px;">${otp}</h1>
-          </div>
-          <p style="color: #666;">This OTP will expire in 5 minutes.</p>
-          <p style="color: #666;">If you didn't request this OTP, please ignore this email.</p>
-        </div>
-      `,
+      subject: "GPI Connect - Password Reset OTP Code",
+      html: getOtpEmailTemplate({
+        otp,
+        action: "Password Reset",
+      }),
     });
     if (error) {
       console.error("Brevo email error:", error);

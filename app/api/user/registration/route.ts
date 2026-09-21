@@ -3,6 +3,7 @@ import {prisma} from "@/lib/prisma";
 import {NextRequest, NextResponse} from "next/server";
 import {RegisterUserSchema} from "@/schemas/user.schema";
 import {sendEmail} from "@/lib/brevo";
+import {getWelcomeEmailTemplate} from "@/lib/email-templates";
 import {verifyAuth} from "@/lib/verify";
 import {logEvent} from "@/utils/sentry";
 
@@ -72,21 +73,12 @@ export async function POST(request: NextRequest) {
         await sendEmail({
             from: process.env.FROM_EMAIL!,
             to: [email.toLowerCase().trim()],
-            subject: "Welcome to GPI Connect",
-            html: `
-            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-              <h2 style="color: #333;">Welcome to GPI Connect!</h2>
-              <p>Hi ${name},</p>
-              <p>We are pleased to inform you that an account has been created for you by the administrator. You may now log in and begin using the platform's features.</p>
-              <div style="background-color: #f4f4f4; padding: 20px; text-align: center; margin: 20px 0;">
-                <h3 style="color: #2563eb; margin: 0;">We're excited to have you on board!</h3>
-                <h5 style="color: #2563eb; margin: 0;">Your email: ${email.toLowerCase().trim()}</h5>
-                <h5 style="color: #2563eb; margin: 0;">Your Password: ${password}</h5>
-              </div>
-              <p style="color: #666;">If you have any questions, feel free to reply to this email.</p>
-              <p style="color: #666;">Best regards,<br/>The GPI Connect Team, ${process.env.FROM_EMAIL}</p>
-            </div>
-          `,
+            subject: "Welcome to GPI Connect - Account Activation",
+            html: getWelcomeEmailTemplate({
+                name,
+                email: email.toLowerCase().trim(),
+                password,
+            }),
         });
         return NextResponse.json(
             {status: 200, error: false, msg: "Signup successful", data: user},

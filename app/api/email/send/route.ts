@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { sendEmail } from "@/lib/brevo";
+import { getActivityEmailTemplate } from "@/lib/email-templates";
 
 export const dynamic = "force-dynamic";
 import { getCurrentUser } from "@/lib/current-user";
@@ -154,25 +155,13 @@ export async function POST(request: NextRequest) {
       senderName: senderName ? `${senderName} (via GPI Connect)` : "GPI Connect",
       to: [to],
       subject: subject,
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-            <h2 style="color: #333; margin: 0;">GPI Connect</h2>
-            <p style="color: #666; margin: 5px 0 0 0;">Message from ${senderName}</p>
-          </div>
-          <div style="background-color: #ffffff; padding: 20px; border-radius: 8px; border: 1px solid #e9ecef;">
-            <h3 style="color: #495057; margin-top: 0;">${subject}</h3>
-            <div style="color: #495057; line-height: 1.6; font-size: 14px;">
-              ${html}
-            </div>
-          </div>
-          <div style="margin-top: 20px; padding: 15px; background-color: #f8f9fa; border-radius: 8px; text-align: center;">
-            <p style="color: #6c757d; margin: 0; font-size: 14px;">
-              This email was sent from the GPI Connect system
-            </p>
-          </div>
-        </div>
-      `,
+      html: getActivityEmailTemplate({
+        senderName: senderName || "GPI Connect Member",
+        senderEmail: senderEmail || undefined,
+        recipientName: recipientName || undefined,
+        subject,
+        htmlBody: html,
+      }),
     });
 
     if (error) {
