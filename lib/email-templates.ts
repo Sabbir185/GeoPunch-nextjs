@@ -5,14 +5,10 @@
 
 const LOGO_URL =
   "https://raw.githubusercontent.com/Sabbir185/GeoPunch-nextjs/main/public/images/gpi-logo-3d.png";
-const FALLBACK_SITE_URL = "https://gpiconnect.com";
+const CUSTOM_SITE_URL = "https://www.gpiconnect.com";
 
 function getSiteUrl(): string {
-  const envUrl = process.env.NEXT_PUBLIC_APP_URL;
-  if (envUrl && !envUrl.includes("localhost")) {
-    return envUrl;
-  }
-  return FALLBACK_SITE_URL;
+  return CUSTOM_SITE_URL;
 }
 
 /**
@@ -178,18 +174,20 @@ export function getActivityEmailTemplate({
   const siteUrl = getSiteUrl();
 
   const content = `
-    <!-- Greeting -->
-    <div style="margin-bottom: 20px;">
-      <h2 style="margin: 0 0 8px 0; font-size: 20px; font-weight: 700; color: #0f172a; letter-spacing: -0.3px;">
-        ${recipientName ? `Hello ${recipientName},` : "Hello,"}
-      </h2>
+    <!-- Notification & Recipient Info -->
+    <div style="margin-bottom: 22px;">
+      ${
+        recipientName
+          ? `<div style="font-size: 13px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">To: <span style="color: #0f172a;">${recipientName}</span></div>`
+          : ""
+      }
       <p style="margin: 0; font-size: 14px; color: #64748b;">
-        You have received a new message regarding faculty presence on <strong>GPI Connect</strong>.
+        You have received a new message on <strong>GPI Connect</strong>.
       </p>
     </div>
 
-    <!-- Sender Information Badge -->
-    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px 18px; margin-bottom: 24px; display: table; width: 100%; box-sizing: border-box;">
+    <!-- Sender Information Badge (Borderless & Clean) -->
+    <div style="background: #f8fafc; border-radius: 12px; padding: 14px 18px; margin-bottom: 24px; display: table; width: 100%; box-sizing: border-box;">
       <table border="0" cellpadding="0" cellspacing="0" width="100%">
         <tr>
           <td width="38" valign="middle" style="padding-right: 12px;">
@@ -208,8 +206,8 @@ export function getActivityEmailTemplate({
             }
           </td>
           <td align="right" valign="middle">
-            <span style="font-size: 11px; font-weight: 600; color: #2563eb; background: #eff6ff; padding: 3px 8px; border-radius: 6px; border: 1px solid #dbeafe;">
-              Faculty Communication
+            <span style="font-size: 11px; font-weight: 600; color: #2563eb; background: #eff6ff; padding: 3px 10px; border-radius: 6px; border: 1px solid #dbeafe;">
+              Direct Message
             </span>
           </td>
         </tr>
@@ -217,7 +215,7 @@ export function getActivityEmailTemplate({
     </div>
 
     <!-- Message Container -->
-    <div style="background-color: #ffffff; border-left: 4px solid #2563eb; border-top: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; border-radius: 8px; padding: 20px 22px; margin-bottom: 28px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);">
+    <div style="background-color: #ffffff; border-left: 4px solid #2563eb; border-top: 1px solid #e2e8f0; border-right: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; border-radius: 8px; padding: 20px 22px; margin-bottom: 8px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);">
       <div style="font-size: 13px; font-weight: 700; text-transform: uppercase; color: #2563eb; letter-spacing: 0.5px; margin-bottom: 8px;">
         Subject: ${subject}
       </div>
@@ -225,18 +223,11 @@ export function getActivityEmailTemplate({
         ${htmlBody}
       </div>
     </div>
-
-    <!-- CTA Button -->
-    <div style="text-align: center; margin: 32px 0 16px 0;">
-      <a href="${siteUrl}/activity" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); color: #ffffff !important; font-size: 14px; font-weight: 600; text-decoration: none; padding: 12px 28px; border-radius: 10px; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35); letter-spacing: 0.2px;">
-        View Faculty Activity Board →
-      </a>
-    </div>
   `;
 
   return baseTemplate({
     previewText: `Message from ${senderName}: ${subject}`,
-    headerBadge: "Faculty Activity Message",
+    headerBadge: "Activity Message",
     content,
   });
 }
@@ -319,7 +310,7 @@ export function getWelcomeEmailTemplate({
         Welcome to GPI Connect, ${name}! 🎉
       </h2>
       <p style="margin: 0; font-size: 14px; color: #64748b;">
-        Your official account has been configured by the system administrator. You now have full access to presence tracking, faculty availability, and live attendance.
+        Your official account has been configured by the system administrator. You now have full access to presence tracking, team availability, and live attendance.
       </p>
     </div>
 
@@ -356,7 +347,7 @@ export function getWelcomeEmailTemplate({
       <ol style="margin: 0; padding-left: 20px; font-size: 14px; color: #475569; line-height: 1.8;">
         <li>Log in to your account using the credentials above.</li>
         <li>Update your password in Account Settings for enhanced security.</li>
-        <li>Check the <strong>Live Activity Board</strong> to view faculty presence in real-time.</li>
+        <li>Check the <strong>Live Activity Board</strong> to view real-time presence.</li>
       </ol>
     </div>
 

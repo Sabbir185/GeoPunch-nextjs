@@ -410,7 +410,7 @@ export default function ActivityPage() {
             }
           }}
           title="Sign in to Send Email"
-          description="Please sign in with your Google account to send emails to faculty members."
+          description="Please sign in with your Google account to send emails."
         />
       </div>
     </div>
