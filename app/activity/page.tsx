@@ -48,14 +48,15 @@ export default function ActivityPage() {
   };
 
   const handleEmailClick = (email: string, name: string) => {
+    setSelectedUserEmail(email);
+    setSelectedUserName(name);
+
     if (!user) {
-      toast.error("Please sign in with Google to send emails");
+      toast.info("Please sign in with Google to send emails");
       setIsAuthModalOpen(true);
       return;
     }
 
-    setSelectedUserEmail(email);
-    setSelectedUserName(name);
     setIsEmailModalOpen(true);
   };
 
@@ -402,7 +403,14 @@ export default function ActivityPage() {
         <GoogleAuthModal
           isOpen={isAuthModalOpen}
           onClose={() => setIsAuthModalOpen(false)}
-          onSuccess={() => setIsAuthModalOpen(false)}
+          onSuccess={() => {
+            setIsAuthModalOpen(false);
+            if (selectedUserEmail) {
+              setIsEmailModalOpen(true);
+            }
+          }}
+          title="Sign in to Send Email"
+          description="Please sign in with your Google account to send emails to faculty members."
         />
       </div>
     </div>

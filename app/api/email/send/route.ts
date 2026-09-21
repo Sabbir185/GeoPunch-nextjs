@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { sendEmail } from "@/lib/resend";
+import { sendEmail } from "@/lib/brevo";
 
 export const dynamic = "force-dynamic";
 import { getCurrentUser } from "@/lib/current-user";
@@ -18,19 +18,45 @@ async function initializeFirebaseAdmin() {
       const admin = await import('firebase-admin');
       
       if (!admin.apps.length) {
-        // Initialize Firebase Admin with service account file
-        try {
-          const serviceAccountPath = path.join(process.cwd(), 'lib', 'firebaseGPIConnectAdmin.json');
-          const serviceAccountKey = fs.readFileSync(serviceAccountPath, 'utf8');
-          const serviceAccount = JSON.parse(serviceAccountKey);
-          
-          admin.initializeApp({
-            credential: admin.credential.cert(serviceAccount as ServiceAccount),
-          });
-        } catch (credentialError) {
-          console.error('Error loading Firebase service account credentials:', credentialError);
+        let serviceAccount: ServiceAccount | null = null;
+
+        // 1. Try FIREBASE_SERVICE_ACCOUNT_KEY environment variable
+        if (process.env.FIREBASE_SERVICE_ACCOUNT_KEY) {
+          try {
+            serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY);
+          } catch (envError) {
+            console.error('Error parsing FIREBASE_SERVICE_ACCOUNT_KEY env var:', envError);
+          }
+        }
+
+        // 2. Try credential file fallback
+        if (!serviceAccount) {
+          const candidatePaths = [
+            path.join(process.cwd(), 'lib', 'firebaseGPIConnectAdmin.json'),
+            path.join(process.cwd(), 'lib', 'firebaseGeoPunchAdmin.json'),
+          ];
+
+          for (const filePath of candidatePaths) {
+            if (fs.existsSync(filePath)) {
+              try {
+                const serviceAccountKey = fs.readFileSync(filePath, 'utf8');
+                serviceAccount = JSON.parse(serviceAccountKey);
+                break;
+              } catch (fileError) {
+                console.error(`Error reading service account file at ${filePath}:`, fileError);
+              }
+            }
+          }
+        }
+
+        if (!serviceAccount) {
+          console.error('No Firebase service account credentials found (checked FIREBASE_SERVICE_ACCOUNT_KEY and lib/firebaseGPIConnectAdmin.json)');
           return null;
         }
+
+        admin.initializeApp({
+          credential: admin.credential.cert(serviceAccount as ServiceAccount),
+        });
       }
       
       adminAuth = admin.auth();
@@ -120,6 +146,7 @@ export async function POST(request: NextRequest) {
     // Send email
     const { data, error } = await sendEmail({
       from: process.env.FROM_EMAIL!,
+      senderName: senderName ? `${senderName} (via GPI Connect)` : "GPI Connect",
       to: [to],
       subject: subject,
       html: `

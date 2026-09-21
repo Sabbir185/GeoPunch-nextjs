@@ -51,13 +51,18 @@ export const FirebaseAuthProvider = ({ children }: { children: React.ReactNode }
 
   const signInWithGoogle = async (): Promise<User | null> => {
     if (!auth || !googleProvider) {
-      console.warn('Firebase Auth is not configured');
-      return null;
+      const msg = 'Firebase Authentication is not configured. Please verify NEXT_PUBLIC_FIREBASE_* environment variables.';
+      console.error(msg);
+      throw new Error(msg);
     }
     try {
       const result = await signInWithPopup(auth, googleProvider);
       return result.user;
-    } catch (error) {
+    } catch (error: any) {
+      if (error?.code === 'auth/popup-closed-by-user' || error?.code === 'auth/cancelled-popup-request') {
+        console.log('Google sign-in popup was closed or cancelled');
+        return null;
+      }
       console.error('Google sign in error:', error);
       throw error;
     }

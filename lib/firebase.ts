@@ -32,6 +32,7 @@ if (hasFirebaseConfig) {
     googleProvider = new GoogleAuthProvider();
     googleProvider.addScope('email');
     googleProvider.addScope('profile');
+    googleProvider.setCustomParameters({ prompt: 'select_account' });
   } catch (error) {
     console.error("Firebase initialization failed:", error);
   }

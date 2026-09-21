@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import {prisma} from "@/lib/prisma";
 import {NextRequest, NextResponse} from "next/server";
 import {RegisterUserSchema} from "@/schemas/user.schema";
-import {sendEmail} from "@/lib/resend";
+import {sendEmail} from "@/lib/brevo";
 import {verifyAuth} from "@/lib/verify";
 import {logEvent} from "@/utils/sentry";
 

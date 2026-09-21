@@ -10,22 +10,40 @@ interface GoogleAuthModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccess: () => void;
+  title?: string;
+  description?: string;
 }
 
-const GoogleAuthModal: React.FC<GoogleAuthModalProps> = ({ isOpen, onClose, onSuccess }) => {
+const GoogleAuthModal: React.FC<GoogleAuthModalProps> = ({
+  isOpen,
+  onClose,
+  onSuccess,
+  title = "Sign In with Google",
+  description = "Please sign in with Google to continue",
+}) => {
   const { signInWithGoogle } = useFirebaseAuth();
   const [loading, setLoading] = useState(false);
 
   const handleGoogleSignIn = async () => {
     setLoading(true);
     try {
-      await signInWithGoogle();
-      toast.success('Successfully signed in with Google!');
-      onSuccess();
-      onClose();
+      const user = await signInWithGoogle();
+      if (user) {
+        toast.success(`Successfully signed in as ${user.displayName || user.email}!`);
+        onSuccess();
+        onClose();
+      }
     } catch (error: any) {
       console.error('Google sign in error:', error);
-      toast.error(error.message || 'Failed to sign in with Google');
+      let message = 'Failed to sign in with Google';
+      if (error?.code === 'auth/unauthorized-domain') {
+        message = 'This domain is not authorized in Firebase Console (Authentication > Settings > Authorized domains).';
+      } else if (error?.code === 'auth/popup-blocked') {
+        message = 'Sign-in popup was blocked by browser. Please allow popups for this site.';
+      } else if (error?.message) {
+        message = error.message;
+      }
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -35,17 +53,17 @@ const GoogleAuthModal: React.FC<GoogleAuthModalProps> = ({ isOpen, onClose, onSu
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[400px]">
         <DialogHeader>
-          <DialogTitle className="text-center">Sign In / Sign Up</DialogTitle>
+          <DialogTitle className="text-center">{title}</DialogTitle>
         </DialogHeader>
         <div className="space-y-4 pt-4">
           <div className="text-center text-sm text-gray-600 mb-4">
-            Please sign in with Google to send emails
+            {description}
           </div>
           
           <Button
             onClick={handleGoogleSignIn}
             disabled={loading}
-            className="w-full bg-white hover:bg-gray-50 text-gray-900 border border-gray-300 flex items-center justify-center gap-3"
+            className="w-full bg-white hover:bg-gray-50 text-gray-900 border border-gray-300 flex items-center justify-center gap-3 cursor-pointer shadow-sm"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path

@@ -212,6 +212,8 @@ export default function ActivityLayout({children}: { children?: React.ReactNode 
                 isOpen={isAuthModalOpen}
                 onClose={() => setIsAuthModalOpen(false)}
                 onSuccess={() => setIsAuthModalOpen(false)}
+                title="Sign In with Google"
+                description="Sign in with your Google account to access faculty interactive features."
             />
         </div>
     );

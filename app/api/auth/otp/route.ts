@@ -1,5 +1,5 @@
 import {prisma} from "@/lib/prisma";
-import {sendEmail} from "@/lib/resend";
+import {sendEmail} from "@/lib/brevo";
 import {generateOTP} from "@/utils/common";
 import {NextRequest, NextResponse} from "next/server";
 
@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
       `,
         });
         if (error) {
-            console.error("Resend error:", error);
+            console.error("Brevo email error:", error);
             return NextResponse.json(
                 {status: 500, error: true, msg: "Failed to send OTP email"},
                 {status: 500}

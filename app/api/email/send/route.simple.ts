@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { sendEmail } from "@/lib/resend";
+import { sendEmail } from "@/lib/brevo";
 import { getCurrentUser } from "@/lib/current-user";
 import { logEvent } from "@/utils/sentry";
 
